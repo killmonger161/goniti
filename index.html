@@ -490,10 +490,10 @@
     // Syllabus Data (Based on official NCTB HSC curriculum)
     const syllabus = {
         firstPaper: [
-            { id: 1, name: "Matrices and Determinants", nameBn: "ম্যাট্রিক্স ও নির্ণায়ক", topics: ["Determinant Visualization", "Matrix Transformations", "Inverse Matrix"], icon: "fa-table", path: "pages/1st-paper/01-matrices/determinant.html", available: false },
-            { id: 2, name: "Vectors", nameBn: "সদিক রাশি", topics: ["2D Addition", "Dot Product", "Cross Product", "3D Vectors"], icon: "fa-arrow-right", path: "pages/1st-paper/02-vectors/addition.html", available: false },
-            { id: 3, name: "Straight Lines", nameBn: "সরলরেখা", topics: ["Slope-Intercept Form", "Angle Between Lines"], icon: "fa-chart-line", path: "pages/1st-paper/03-straight-lines/slope-intercept.html", available: false },
-            { id: 4, name: "Circle", nameBn: "বৃত্ত", topics: ["Standard Form", "Tangent Lines", "Intersections"], icon: "fa-circle", path: "pages/1st-paper/04-circle/standard-form.html", available: false },
+            { id: 1, name: "Matrices and Determinants", nameBn: "ম্যাট্রিক্স ও নির্ণায়ক", topics: ["Determinant Visualization", "Matrix Transformations", "Inverse Matrix"], icon: "fa-table", path: "pages/1st-paper/01-matrices/01-intro.html", available: true },
+            { id: 2, name: "Vectors", nameBn: "সদিক রাশি", topics: ["2D Addition", "Dot Product", "Cross Product", "3D Vectors"], icon: "fa-arrow-right", path: "pages/1st-paper/02-vectors/addition.html", available: true },
+            { id: 3, name: "Straight Lines", nameBn: "সরলরেখা", topics: ["Slope-Intercept Form", "Angle Between Lines"], icon: "fa-chart-line", path: "pages/1st-paper/03-straight-lines/slope-intercept.html", available: true },
+            { id: 4, name: "Circle", nameBn: "বৃত্ত", topics: ["Standard Form", "Tangent Lines", "Intersections"], icon: "fa-circle", path: "pages/1st-paper/04-circle/standard-form.html", available: true },
             { id: 5, name: "Permutation and Combination", nameBn: "বিন্যাস ও সমাবেশ", topics: ["Tree Diagram", "Factorial Visualizer"], icon: "fa-tree", path: "pages/1st-paper/05-permutation-combination/tree-diagram.html", available: false },
             { id: 6, name: "Trigonometric Ratios", nameBn: "ত্রিকোণমিতিক অনুপাত", topics: ["Unit Circle", "Sine/Cosine/Tan Graphs"], icon: "fa-chart-simple", path: "pages/1st-paper/06-trigonometric-ratios/unit-circle.html", available: false },
             { id: 7, name: "Trigonometric Ratios of Associated Angles", nameBn: "সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত", topics: ["Angle Transformations", "θ → 90°-θ", "θ → 180°-θ"], icon: "fa-sync-alt", path: "pages/1st-paper/07-associated-angles/angle-transformations.html", available: false },
@@ -502,9 +502,9 @@
             { id: 10, name: "Integration", nameBn: "সমাকলন", topics: ["Area Under Curve", "Riemann Sums", "Definite Integral"], icon: "fa-chart-area", path: "pages/1st-paper/10-integration/area-under-curve.html", available: false }
         ],
         secondPaper: [
-            { id: 1, name: "Real Numbers and Inequalities", nameBn: "বাস্তব সংখ্যা ও অসমতা", topics: ["Number Line", "Inequality Shading"], icon: "fa-chart-line", path: "pages/2nd-paper/01-inequalities/number-line.html", available: false },
-            { id: 2, name: "Linear Programming", nameBn: "সরল ব্যবস্থাপনা", topics: ["Feasible Region", "Objective Function", "Corner Points"], icon: "fa-chart-pie", path: "pages/2nd-paper/02-linear-programming/feasible-region.html", available: false },
-            { id: 3, name: "Complex Numbers", nameBn: "জটিল সংখ্যা", topics: ["Argand Diagram", "Modulus & Argument", "Rotation"], icon: "fa-cube", path: "pages/2nd-paper/03-complex-numbers/argand-diagram.html", available: false },
+            { id: 1, name: "Real Numbers and Inequalities", nameBn: "বাস্তব সংখ্যা ও অসমতা", topics: ["Number Line", "Inequality Shading"], icon: "fa-chart-line", path: "pages/2nd-paper/01-inequalities/number-line.html", available: true },
+            { id: 2, name: "Linear Programming", nameBn: "সরল ব্যবস্থাপনা", topics: ["Feasible Region", "Objective Function", "Corner Points"], icon: "fa-chart-pie", path: "pages/2nd-paper/02-linear-programming/feasible-region.html", available: true },
+            { id: 3, name: "Complex Numbers", nameBn: "জটিল সংখ্যা", topics: ["Argand Diagram", "Modulus & Argument", "Rotation"], icon: "fa-cube", path: "pages/2nd-paper/03-complex-numbers/argand-diagram.html", available: true },
             { id: 4, name: "Polynomials and Polynomial Equations", nameBn: "বহুপদী ও বহুপদীর সমীকরণ", topics: ["Graph Visualization", "Root Finding", "Multiplicity"], icon: "fa-chart-line", path: "pages/2nd-paper/04-polynomials/graph.html", available: false },
             { id: 5, name: "Binomial Expansion", nameBn: "দ্বিপদী বিস্তৃতি", topics: ["Pascal's Triangle", "Term Highlighter"], icon: "fa-chart-simple", path: "pages/2nd-paper/05-binomial-expansion/pascal-triangle.html", available: false },
             { id: 6, name: "Conics", nameBn: "কনিকস", topics: ["Parabola", "Ellipse", "Hyperbola"], icon: "fa-chart-line", path: "pages/2nd-paper/06-conics/parabola.html", available: false },
@@ -636,6 +636,10 @@
             }
         }
     });
+    
+    // Initialize the page
+    renderChapters();
+    initTheme();
 </script>
 </body>
 </html>
