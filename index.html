@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>গনিতি | Goniti — Visual Higher Mathematics for HSC Bangladesh</title>
+    <meta name="description" content="Interactive visualizations for HSC Higher Mathematics (1st & 2nd Paper). Learn matrices, vectors, calculus, conics and more through animated graphs.">
+    <meta name="theme-color" content="#3B82F6">
+    
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts: Poppins (headings) + Inter (body) - both pass Il1 test -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ---------- CSS Variables (Light Mode Default) ---------- */
+        :root {
+            /* Light mode colors (research-backed: light mode improves reading speed & accuracy) */
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-surface: #F3F4F6;
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border-light: #E5E7EB;
+            --border-medium: #D1D5DB;
+            --accent-blue: #3B82F6;
+            --accent-blue-hover: #2563EB;
+            --accent-blue-light: #EFF6FF;
+            --accent-purple: #8B5CF6;
+            --accent-green: #10B981;
+            --accent-orange: #F59E0B;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.2s ease;
+        }
+        
+        /* Dark mode colors (research: dark mode reduces eye fatigue in low-light conditions) */
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1E1E1E;
+            --bg-card: #1E1E1E;
+            --bg-surface: #2D2D2D;
+            --text-primary: #E5E7EB;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border-light: #2D2D2D;
+            --border-medium: #404040;
+            --accent-blue: #60A5FA;
+            --accent-blue-hover: #3B82F6;
+            --accent-blue-light: #1E3A5F;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* System preference detection (respects user's OS setting) */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg-primary: #121212;
+                --bg-secondary: #1E1E1E;
+                --bg-card: #1E1E1E;
+                --bg-surface: #2D2D2D;
+                --text-primary: #E5E7EB;
+                --text-secondary: #9CA3AF;
+                --text-muted: #6B7280;
+                --border-light: #2D2D2D;
+                --border-medium: #404040;
+                --accent-blue: #60A5FA;
+                --accent-blue-hover: #3B82F6;
+                --accent-blue-light: #1E3A5F;
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;  /* Research: line height minimum 1.5x font size */
+            font-size: 16px;   /* Research: minimum 16px for web content */
+            transition: var(--transition);
+        }
+        
+        /* Typography - Poppins for headings (clean, modern) */
+        h1, h2, h3, h4, .logo, .chapter-title, .nav-link {
+            font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 16px 0;
+        }
+        
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            font-size: 28px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .logo-bn {
+            font-size: 28px;
+        }
+        
+        .logo-en {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 32px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        
+        .theme-btn.active {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+        
+        .theme-btn:hover:not(.active) {
+            background-color: var(--border-light);
+            color: var(--text-primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 64px 0 48px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-surface) 100%);
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background-color: var(--accent-blue-light);
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        
+        /* Paper Sections */
+        .paper-section {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .paper-section:last-child {
+            border-bottom: none;
+        }
+        
+        .paper-header {
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .paper-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background-color: var(--accent-blue-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        
+        .paper-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .paper-title-bn {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        /* Chapter Grid */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Chapter Card - interactive and accessible */
+        .chapter-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            transition: var(--transition);
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+        
+        .chapter-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent-blue);
+        }
+        
+        /* Chapter card icons - visual indicators beyond color (accessibility) */
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--accent-blue-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .card-icon i {
+            font-size: 24px;
+            color: var(--accent-blue);
+        }
+        
+        .chapter-number {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .chapter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .chapter-title-bn {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .topic-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .topic-tag {
+            font-size: 11px;
+            padding: 4px 8px;
+            background-color: var(--bg-surface);
+            border-radius: 6px;
+            color: var(--text-secondary);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 48px 0 32px 0;
+            border-top: 1px solid var(--border-light);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        /* Under Construction Badge */
+        .coming-soon {
+            opacity: 0.7;
+            position: relative;
+        }
+        
+        .coming-soon .card-icon i {
+            opacity: 0.5;
+        }
+        
+        .badge-coming {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background-color: var(--accent-orange);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .paper-title {
+                font-size: 22px;
+            }
+            
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar .container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        /* Loading state for future dynamic content */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        
+        /* Focus styles for keyboard navigation (accessibility) */
+        .chapter-card:focus-visible,
+        .theme-btn:focus-visible {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <a href="#" class="logo">
+            <span class="logo-bn">গনিতি</span>
+            <span class="logo-en">Goniti</span>
+        </a>
+        <div class="nav-controls">
+            <div class="theme-toggle" role="group" aria-label="Theme selector">
+                <button class="theme-btn active" data-theme="light" aria-label="Light mode">
+                    <i class="fas fa-sun"></i> <span class="hide-mobile">লাইট</span>
+                </button>
+                <button class="theme-btn" data-theme="dark" aria-label="Dark mode">
+                    <i class="fas fa-moon"></i> <span class="hide-mobile">ডার্ক</span>
+                </button>
+                <button class="theme-btn" data-theme="system" aria-label="System preference">
+                    <i class="fas fa-desktop"></i> <span class="hide-mobile">সিস্টেম</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="hero">
+        <div class="container">
+            <span class="hero-badge">
+                <i class="fas fa-chart-line"></i> HSC Higher Mathematics ২০২৬
+            </span>
+            <h1>Enjoy Learning Mathematics</h1>
+            <p>প্রতিটি অধ্যায়ের গ্রাফ, অ্যানিমেশন ও ইন্টারেক্টিভ ভিজুয়ালাইজেশন। HSC পরীক্ষার্থীদের জন্য তৈরি।</p>
+        </div>
+    </section>
+
+    <!-- First Paper (1st Paper) -->
+    <section class="paper-section">
+        <div class="container">
+            <div class="paper-header">
+                <span class="paper-number">PAPER 01</span>
+                <h2 class="paper-title">Higher Mathematics 1st Paper</h2>
+                <span class="paper-title-bn">(উচ্চতর গণিত ১ম পত্র)</span>
+            </div>
+            <div class="chapter-grid" id="first-paper-grid">
+                <!-- Will be populated by JavaScript -->
+                <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading chapters...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Second Paper (2nd Paper) -->
+    <section class="paper-section">
+        <div class="container">
+            <div class="paper-header">
+                <span class="paper-number">PAPER 02</span>
+                <h2 class="paper-title">Higher Mathematics 2nd Paper</h2>
+                <span class="paper-title-bn">(উচ্চতর গণিত ২য় পত্র)</span>
+            </div>
+            <div class="chapter-grid" id="second-paper-grid">
+                <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading chapters...</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p><i class="fas fa-chalkboard-user"></i> গনিতি (Goniti) — Visual Higher Mathematics for Bangladesh</p>
+        <p style="margin-top: 8px; font-size: 12px;">
+            প্রতিটি ভিজুয়ালাইজেশন ইন্টারেক্টিভ | ডার্ক/লাইট মোড সমর্থিত | সম্পূর্ণ বিনামূল্যে
+        </p>
+    </div>
+</footer>
+
+<script>
+    // Syllabus Data (Based on official NCTB HSC curriculum)
+    const syllabus = {
+        firstPaper: [
+            { id: 1, name: "Matrices and Determinants", nameBn: "ম্যাট্রিক্স ও নির্ণায়ক", topics: ["Determinant Visualization", "Matrix Transformations", "Inverse Matrix"], icon: "fa-table", path: "pages/1st-paper/01-matrices/determinant.html", available: false },
+            { id: 2, name: "Vectors", nameBn: "সদিক রাশি", topics: ["2D Addition", "Dot Product", "Cross Product", "3D Vectors"], icon: "fa-arrow-right", path: "pages/1st-paper/02-vectors/addition.html", available: false },
+            { id: 3, name: "Straight Lines", nameBn: "সরলরেখা", topics: ["Slope-Intercept Form", "Angle Between Lines"], icon: "fa-chart-line", path: "pages/1st-paper/03-straight-lines/slope-intercept.html", available: false },
+            { id: 4, name: "Circle", nameBn: "বৃত্ত", topics: ["Standard Form", "Tangent Lines", "Intersections"], icon: "fa-circle", path: "pages/1st-paper/04-circle/standard-form.html", available: false },
+            { id: 5, name: "Permutation and Combination", nameBn: "বিন্যাস ও সমাবেশ", topics: ["Tree Diagram", "Factorial Visualizer"], icon: "fa-tree", path: "pages/1st-paper/05-permutation-combination/tree-diagram.html", available: false },
+            { id: 6, name: "Trigonometric Ratios", nameBn: "ত্রিকোণমিতিক অনুপাত", topics: ["Unit Circle", "Sine/Cosine/Tan Graphs"], icon: "fa-chart-simple", path: "pages/1st-paper/06-trigonometric-ratios/unit-circle.html", available: false },
+            { id: 7, name: "Trigonometric Ratios of Associated Angles", nameBn: "সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত", topics: ["Angle Transformations", "θ → 90°-θ", "θ → 180°-θ"], icon: "fa-sync-alt", path: "pages/1st-paper/07-associated-angles/angle-transformations.html", available: false },
+            { id: 8, name: "Functions and Graphs of Functions", nameBn: "ফাংশন ও ফাংশনের লেখচিত্র", topics: ["Linear", "Quadratic", "Exponential", "Logarithmic", "Modulus"], icon: "fa-chart-line", path: "pages/1st-paper/08-functions/quadratic.html", available: false },
+            { id: 9, name: "Differentiation", nameBn: "অন্তরীকরণ", topics: ["Tangent Slope", "Derivative Rules", "Rate of Change"], icon: "fa-chart-line", path: "pages/1st-paper/09-differentiation/tangent-slope.html", available: false },
+            { id: 10, name: "Integration", nameBn: "সমাকলন", topics: ["Area Under Curve", "Riemann Sums", "Definite Integral"], icon: "fa-chart-area", path: "pages/1st-paper/10-integration/area-under-curve.html", available: false }
+        ],
+        secondPaper: [
+            { id: 1, name: "Real Numbers and Inequalities", nameBn: "বাস্তব সংখ্যা ও অসমতা", topics: ["Number Line", "Inequality Shading"], icon: "fa-chart-line", path: "pages/2nd-paper/01-inequalities/number-line.html", available: false },
+            { id: 2, name: "Linear Programming", nameBn: "সরল ব্যবস্থাপনা", topics: ["Feasible Region", "Objective Function", "Corner Points"], icon: "fa-chart-pie", path: "pages/2nd-paper/02-linear-programming/feasible-region.html", available: false },
+            { id: 3, name: "Complex Numbers", nameBn: "জটিল সংখ্যা", topics: ["Argand Diagram", "Modulus & Argument", "Rotation"], icon: "fa-cube", path: "pages/2nd-paper/03-complex-numbers/argand-diagram.html", available: false },
+            { id: 4, name: "Polynomials and Polynomial Equations", nameBn: "বহুপদী ও বহুপদীর সমীকরণ", topics: ["Graph Visualization", "Root Finding", "Multiplicity"], icon: "fa-chart-line", path: "pages/2nd-paper/04-polynomials/graph.html", available: false },
+            { id: 5, name: "Binomial Expansion", nameBn: "দ্বিপদী বিস্তৃতি", topics: ["Pascal's Triangle", "Term Highlighter"], icon: "fa-chart-simple", path: "pages/2nd-paper/05-binomial-expansion/pascal-triangle.html", available: false },
+            { id: 6, name: "Conics", nameBn: "কনিকস", topics: ["Parabola", "Ellipse", "Hyperbola"], icon: "fa-chart-line", path: "pages/2nd-paper/06-conics/parabola.html", available: false },
+            { id: 7, name: "Inverse Trigonometric Functions and Trigonometric Equations", nameBn: "বিপরীত ত্রিকোণমিতিক ফাংশন ও সমীকরণ", topics: ["arcsin", "arccos", "arctan Graphs"], icon: "fa-chart-line", path: "pages/2nd-paper/07-inverse-trig/arcsin.html", available: false },
+            { id: 8, name: "Statics", nameBn: "স্থিতিবিদ্যা", topics: ["Force Vectors", "Equilibrium Visualization"], icon: "fa-chart-line", path: "pages/2nd-paper/08-statics/force-vectors.html", available: false },
+            { id: 9, name: "Motion of Particles in a Plane", nameBn: "সমতলে বস্তু কণার গতি", topics: ["Projectile Motion", "Velocity Vectors", "Acceleration"], icon: "fa-chart-line", path: "pages/2nd-paper/09-motion/projectile.html", available: false },
+            { id: 10, name: "Measures of Dispersion and Probability", nameBn: "বিক্ষেপের মাপ ও সম্ভাবনা", topics: ["Dice/Coin Simulator", "Normal Distribution", "Standard Deviation"], icon: "fa-chart-line", path: "pages/2nd-paper/10-probability/dice-sim.html", available: false }
+        ]
+    };
+
+    // Helper function to generate chapter card HTML
+    function generateChapterCard(chapter, basePath) {
+        // For now, all topics are "Coming Soon" until pages are built
+        const isAvailable = chapter.available;
+        const cardClass = isAvailable ? "chapter-card" : "chapter-card coming-soon";
+        const badgeHtml = !isAvailable ? '<span class="badge-coming"><i class="fas fa-code-branch"></i> Coming Soon</span>' : '';
+        
+        // Generate topic tags HTML
+        const topicsHtml = chapter.topics.map(topic => 
+            `<span class="topic-tag">${topic}</span>`
+        ).join('');
+        
+        // Determine icon color class
+        const iconColor = isAvailable ? "accent-blue" : "text-muted";
+        
+        return `
+            <a href="${isAvailable ? chapter.path : '#'}" class="${cardClass}" style="${!isAvailable ? 'cursor: default;' : ''}" ${!isAvailable ? 'onclick="return false;"' : ''}>
+                ${badgeHtml}
+                <div class="card-icon">
+                    <i class="fas ${chapter.icon}"></i>
+                </div>
+                <div class="chapter-number">Chapter ${String(chapter.id).padStart(2, '0')}</div>
+                <h3 class="chapter-title">${chapter.name}</h3>
+                <div class="chapter-title-bn">${chapter.nameBn}</div>
+                <div class="topic-list">
+                    ${topicsHtml}
+                </div>
+            </a>
+        `;
+    }
+
+    // Function to render grids
+    function renderChapters() {
+        const firstPaperGrid = document.getElementById('first-paper-grid');
+        const secondPaperGrid = document.getElementById('second-paper-grid');
+        
+        if (firstPaperGrid) {
+            const firstPaperHtml = syllabus.firstPaper.map(chapter => 
+                generateChapterCard(chapter, '1st-paper')
+            ).join('');
+            firstPaperGrid.innerHTML = firstPaperHtml;
+        }
+        
+        if (secondPaperGrid) {
+            const secondPaperHtml = syllabus.secondPaper.map(chapter => 
+                generateChapterCard(chapter, '2nd-paper')
+            ).join('');
+            secondPaperGrid.innerHTML = secondPaperHtml;
+        }
+    }
+
+    // Theme Management (Research-based: users should be able to switch modes)
+    function initTheme() {
+        const savedTheme = localStorage.getItem('goniti-theme') || 'light';
+        setTheme(savedTheme);
+        
+        // Update active button state
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            const themeValue = btn.getAttribute('data-theme');
+            if (themeValue === savedTheme) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    
+    function setTheme(theme) {
+        if (theme === 'system') {
+            // Remove data-theme attribute to let CSS media query take over
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('goniti-theme', 'system');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('goniti-theme', theme);
+        }
+    }
+    
+    // Theme toggle event listeners
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const theme = btn.getAttribute('data-theme');
+            setTheme(theme);
+            
+            // Update active state
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        renderChapters();
+        initTheme();
+    });
+    
+    // Optional: Add keyboard shortcuts for theme switching (accessibility bonus)
+    document.addEventListener('keydown', (e) => {
+        // Alt + L for Light mode, Alt + D for Dark mode, Alt + S for System
+        if (e.altKey) {
+            if (e.key === 'l' || e.key === 'L') {
+                setTheme('light');
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-theme') === 'light');
+                });
+                e.preventDefault();
+            } else if (e.key === 'd' || e.key === 'D') {
+                setTheme('dark');
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-theme') === 'dark');
+                });
+                e.preventDefault();
+            } else if (e.key === 's' || e.key === 'S') {
+                setTheme('system');
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-theme') === 'system');
+                });
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+</body>
+</html>

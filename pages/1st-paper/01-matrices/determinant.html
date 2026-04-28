@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নির্ণায়ক | Determinant | Goniti</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.1.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-surface: #F3F4F6;
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border-light: #E5E7EB;
+            --border-medium: #D1D5DB;
+            --accent-blue: #3B82F6;
+            --accent-blue-hover: #2563EB;
+            --accent-blue-light: #EFF6FF;
+            --accent-green: #10B981;
+            --accent-orange: #F59E0B;
+            --accent-red: #EF4444;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1E1E1E;
+            --bg-card: #1E1E1E;
+            --bg-surface: #2D2D2D;
+            --text-primary: #E5E7EB;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border-light: #2D2D2D;
+            --border-medium: #404040;
+            --accent-blue: #60A5FA;
+            --accent-blue-hover: #3B82F6;
+            --accent-blue-light: #1E3A5F;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 17px;
+            transition: var(--transition);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 12px 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(var(--bg-secondary-rgb), 0.9);
+        }
+        
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .back-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .theme-toggle {
+            display: flex;
+            gap: 4px;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 4px;
+        }
+        
+        .theme-btn {
+            background: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 32px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        
+        .theme-btn.active {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+        
+        /* Sections */
+        .section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        
+        .chapter-badge {
+            display: inline-block;
+            background-color: var(--accent-blue-light);
+            color: var(--accent-blue);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        /* Card */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 24px 0;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Graph container */
+        .graph-container {
+            background-color: var(--bg-surface);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+        
+        #main-graph {
+            width: 100%;
+            height: 500px;
+        }
+        
+        /* Sliders */
+        .slider-group {
+            margin: 20px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--border-medium);
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        input[type="range"]:focus {
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .matrix-cell {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        
+        /* Example buttons */
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .example-btn {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        
+        .example-btn:hover {
+            background-color: var(--accent-blue-light);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        
+        /* Discovery box */
+        .discovery-box {
+            background-color: var(--accent-blue-light);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .discovery-question {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+        }
+        
+        .formula-box {
+            text-align: center;
+            padding: 24px;
+            background-color: var(--bg-surface);
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 24px;
+            margin: 20px 0;
+            transition: all 0.5s ease;
+        }
+        
+        .formula-hidden {
+            filter: blur(8px);
+            cursor: pointer;
+        }
+        
+        .formula-visible {
+            filter: none;
+        }
+        
+        .value-highlight {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .positive { color: var(--accent-blue); }
+        .negative { color: var(--accent-orange); }
+        .zero { color: var(--text-muted); }
+        
+        .footer {
+            padding: 48px 0 32px;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            .section-title {
+                font-size: 24px;
+            }
+            .card {
+                padding: 20px;
+            }
+            #main-graph {
+                height: 400px;
+            }
+        }
+        
+        /* Animation for graph */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .graph-container {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        hr {
+            border-color: var(--border-light);
+            margin: 24px 0;
+        }
+        
+        .scroll-hint {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 14px;
+            animation: bounce 2s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <a href="../../../index.html" class="logo">
+            <span class="logo-bn">গনিতি</span>
+            <span class="logo-en">Goniti</span>
+        </a>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <a href="../../../index.html" class="back-link"><i class="fas fa-arrow-left"></i> সব অধ্যায়</a>
+            <div class="theme-toggle">
+                <button class="theme-btn active" data-theme="light"><i class="fas fa-sun"></i></button>
+                <button class="theme-btn" data-theme="dark"><i class="fas fa-moon"></i></button>
+                <button class="theme-btn" data-theme="system"><i class="fas fa-desktop"></i></button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- Section 1: Introduction -->
+    <div class="container">
+        <div style="padding: 48px 0 24px 0;">
+            <span class="chapter-badge"><i class="fas fa-table"></i> ১ম পত্র | অধ্যায় ০১: ম্যাট্রিক্স ও নির্ণায়ক</span>
+            <h1 style="font-family: 'Poppins', sans-serif; font-size: 42px; font-weight: 700; margin-bottom: 16px;">ম্যাট্রিক্সের নির্ণায়ক</h1>
+            <p style="font-size: 18px; color: var(--text-secondary); max-width: 800px;">Determinant একটি সংখ্যা যা বলে দেয় ম্যাট্রিক্সটি কতটুকু জায়গা প্রসারিত বা সঙ্কুচিত করে, এবং এটি কি উল্টে দেয় নাকি সোজা রাখে।</p>
+        </div>
+    </div>
+
+    <!-- Section 2: The Unit Square -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-square" style="color: var(--accent-blue);"></i>
+                    ১. একক বর্গ (The Unit Square)
+                </div>
+                <p>আমরা একটি বর্গ দিয়ে শুরু করব যার প্রতিটি বাহুর দৈর্ঘ্য 1। এই বর্গের ক্ষেত্রফল = 1।</p>
+                <p style="margin-top: 8px;">এই বর্গের চারটি কোণ: (0,0), (1,0), (1,1), (0,1)</p>
+                <div class="graph-container">
+                    <div id="unit-square-graph" style="height: 350px;"></div>
+                </div>
+                <p style="margin-top: 16px; background-color: var(--bg-surface); padding: 12px; border-radius: 12px;">
+                    <i class="fas fa-info-circle" style="color: var(--accent-blue);"></i> 
+                    <strong>মনে রাখুন:</strong> এই বর্গটিই আমাদের শুরু। একটি ম্যাট্রিক্স এই বর্গটিকে ঘুরিয়ে, বড় করে, ছোট করে, অথবা উল্টে দিতে পারে।
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Meet the Matrix -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-table" style="color: var(--accent-blue);"></i>
+                    ২. ম্যাট্রিক্স ও কলাম ভেক্টর (Matrix & Column Vectors)
+                </div>
+                <p>একটি 2×2 ম্যাট্রিক্সের দুটি কলাম থাকে। প্রতিটি কলাম একটি <strong>ভেক্টর</strong> যা বলে দেয় বর্গের একটি বাহু কোথায় যাবে।</p>
+                
+                <div style="display: flex; justify-content: center; margin: 24px 0;">
+                    <div style="font-family: monospace; font-size: 28px; text-align: center;">
+                        A = 
+                        <span style="display: inline-block; vertical-align: middle;">
+                            <span style="border-right: 2px solid var(--accent-blue); padding-right: 12px;">a &nbsp; b</span><br>
+                            <span style="padding-right: 12px;">c &nbsp; d</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <p><strong style="color: var(--accent-blue);">প্রথম কলাম (a, c)</strong> → বর্গের নিচের বাহুটিকে কোথায় নিয়ে যায়<br>
+                <strong style="color: var(--accent-orange);">দ্বিতীয় কলাম (b, d)</strong> → বর্গের বাম বাহুটিকে কোথায় নিয়ে যায়</p>
+                
+                <div class="graph-container">
+                    <div id="vectors-graph" style="height: 400px;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 14px; color: var(--text-muted); text-align: center;">
+                    <i class="fas fa-arrow-right"></i> নীল তীর → প্রথম কলাম &nbsp;&nbsp;&nbsp; <i class="fas fa-arrow-right" style="color: var(--accent-orange);"></i> কমলা তীর → দ্বিতীয় কলাম
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Interactive Exploration -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-sliders-h" style="color: var(--accent-blue);"></i>
+                    ৩. নিজে হাতে explore করুন (Explore Yourself)
+                </div>
+                <p>নিচের স্লাইডারগুলি সরান। দেখুন কীভাবে বর্গটি বদলায় এবং ক্ষেত্রফল কী হয়।</p>
+                
+                <div class="matrix-grid">
+                    <div class="matrix-cell">
+                        <label>a = <span id="a-val">1.00</span></label>
+                        <input type="range" id="slider-a" min="-3" max="3" step="0.05" value="1">
+                    </div>
+                    <div class="matrix-cell">
+                        <label>b = <span id="b-val">0.00</span></label>
+                        <input type="range" id="slider-b" min="-3" max="3" step="0.05" value="0">
+                    </div>
+                    <div class="matrix-cell">
+                        <label>c = <span id="c-val">0.00</span></label>
+                        <input type="range" id="slider-c" min="-3" max="3" step="0.05" value="0">
+                    </div>
+                    <div class="matrix-cell">
+                        <label>d = <span id="d-val">1.00</span></label>
+                        <input type="range" id="slider-d" min="-3" max="3" step="0.05" value="1">
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <div id="main-graph" style="height: 500px;"></div>
+                </div>
+                
+                <div class="value-highlight" id="det-display">
+                    নির্ণায়ক (Determinant) = <span id="det-value">1.00</span>
+                </div>
+                
+                <div class="example-buttons">
+                    <button class="example-btn" data-a="1" data-b="0" data-c="0" data-d="1">🔵 অভেদ (Identity)</button>
+                    <button class="example-btn" data-a="2" data-b="0" data-c="0" data-d="2">📈 স্কেল ×২ (Scale 2x)</button>
+                    <button class="example-btn" data-a="0.5" data-b="0" data-c="0" data-d="0.5">📉 স্কেল ০.৫x (Scale 0.5x)</button>
+                    <button class="example-btn" data-a="1" data-b="0" data-c="0" data-d="-1">🔄 X-অক্ষে উল্টানো (Flip X)</button>
+                    <button class="example-btn" data-a="-1" data-b="0" data-c="0" data-d="1">🔄 Y-অক্ষে উল্টানো (Flip Y)</button>
+                    <button class="example-btn" data-a="1" data-b="0.8" data-c="0" data-d="1">✂️ শিয়ার X (Shear X)</button>
+                    <button class="example-btn" data-a="0" data-b="-1" data-c="1" data-d="0">🔄 ৯০° ঘূর্ণন (Rotate 90°)</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Discovery Questions -->
+    <section class="section">
+        <div class="container">
+            <div class="discovery-box">
+                <div class="discovery-question">
+                    <i class="fas fa-question-circle"></i> নিজে আবিষ্কার করুন | Try These
+                </div>
+                <p><strong>প্রশ্ন ১:</strong> b এবং c-এর মান 0 রেখে a এবং d সরান। যখন a=2, d=2, তখন ক্ষেত্রফল কত? <span style="color: var(--accent-blue);">[স্লাইডার সরিয়ে দেখুন]</span></p>
+                <p><strong>প্রশ্ন ২:</strong> a=1, d=1, b=0.5, c=0 বসান। ক্ষেত্রফলের কী变化 হয়? </p>
+                <p><strong>প্রশ্ন ৩:</strong> a=1, d=-1, b=0, c=0 বসান। ক্ষেত্রফলের মান কত এবং কেন ঋণাত্মক? </p>
+                <p><strong>প্রশ্ন ৪:</strong> এমন মান বসান যাতে ক্ষেত্রফল শূন্য হয় (0)। তখন বর্গটি কী আকার নেয়? </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: The Formula -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-calculator" style="color: var(--accent-blue);"></i>
+                    ৪. সূত্র (The Formula)
+                </div>
+                <p>উপরের পরীক্ষাগুলো করার পর এবার সূত্রটি দেখুন। নিচের বক্সে ক্লিক করলেই সূত্র দেখা যাবে।</p>
+                
+                <div class="formula-box formula-hidden" id="formula-box">
+                    <span style="font-size: 20px;">✨ সূত্র দেখতে ক্লিক করুন ✨</span>
+                </div>
+                
+                <p style="margin-top: 20px;">
+                    একটি 2×2 ম্যাট্রিক্সের জন্য: <strong>det(A) = a × d - b × c</strong>
+                </p>
+                <p>
+                    এই সূত্রটি ক্ষেত্রফলের পরিবর্তনকে প্রকাশ করে।
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Summary -->
+    <section class="section">
+        <div class="container">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-graduation-cap" style="color: var(--accent-blue);"></i>
+                    ৫. সারাংশ (Summary)
+                </div>
+                
+                <div style="display: grid; gap: 16px;">
+                    <div style="padding: 12px; background-color: var(--bg-surface); border-radius: 12px; border-left: 4px solid var(--accent-blue);">
+                        <strong>🔵 det(A) > 0</strong> → ক্ষেত্রফল বাড়ে বা কমে, কিন্তু উল্টায় না (orientation preserved)
+                    </div>
+                    <div style="padding: 12px; background-color: var(--bg-surface); border-radius: 12px; border-left: 4px solid var(--accent-orange);">
+                        <strong>🟠 det(A) < 0</strong> → ক্ষেত্রফল বাড়ে বা কমে, এবং উল্টে যায় (orientation flipped)
+                    </div>
+                    <div style="padding: 12px; background-color: var(--bg-surface); border-radius: 12px; border-left: 4px solid var(--text-muted);">
+                        <strong>⚪ det(A) = 0</strong> → ক্ষেত্রফল শূন্য, ম্যাট্রিক্সটি singular (উল্টানো সম্ভব নয়)
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <p><strong>মনে রাখবেন:</strong> |det(A)| = ক্ষেত্রফলের পরিবর্তনের অনুপাত</p>
+                <p>যদি |det(A)| = 2, তাহলে নতুন ক্ষেত্রফল = 2 × পুরনো ক্ষেত্রফল</p>
+                <p>যদি |det(A)| = 0.5, তাহলে নতুন ক্ষেত্রফল = অর্ধেক</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="scroll-hint">
+        <i class="fas fa-arrow-down"></i> উপরে স্ক্রল করে আবার দেখতে পারেন
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>গনিতি (Goniti) — দৃশ্যমান উচ্চতর গণিত | Visual Higher Mathematics for HSC Bangladesh</p>
+    </div>
+</footer>
+
+<script>
+    // Theme management
+    function initTheme() {
+        const savedTheme = localStorage.getItem('goniti-theme') || 'light';
+        setTheme(savedTheme);
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            const themeValue = btn.getAttribute('data-theme');
+            if (themeValue === savedTheme) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+    
+    function setTheme(theme) {
+        if (theme === 'system') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        localStorage.setItem('goniti-theme', theme);
+        setTimeout(() => updateAllGraphs(), 50);
+    }
+    
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const theme = btn.getAttribute('data-theme');
+            setTheme(theme);
+            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    
+    // Matrix values
+    let a = 1, b = 0, c = 0, d = 1;
+    
+    // DOM elements
+    const sliderA = document.getElementById('slider-a');
+    const sliderB = document.getElementById('slider-b');
+    const sliderC = document.getElementById('slider-c');
+    const sliderD = document.getElementById('slider-d');
+    const aVal = document.getElementById('a-val');
+    const bVal = document.getElementById('b-val');
+    const cVal = document.getElementById('c-val');
+    const dVal = document.getElementById('d-val');
+    const detValueSpan = document.getElementById('det-value');
+    const detDisplay = document.getElementById('det-display');
+    
+    // Calculate determinant
+    function calculateDeterminant() {
+        return a * d - b * c;
+    }
+    
+    // Update all graphs
+    function updateAllGraphs() {
+        const det = calculateDeterminant();
+        const absDet = Math.abs(det);
+        
+        // Update display
+        detValueSpan.textContent = det.toFixed(4);
+        if (det > 0) {
+            detValueSpan.className = 'positive';
+            detDisplay.className = 'value-highlight positive';
+        } else if (det < 0) {
+            detValueSpan.className = 'negative';
+            detDisplay.className = 'value-highlight negative';
+        } else {
+            detValueSpan.className = 'zero';
+            detDisplay.className = 'value-highlight zero';
+        }
+        
+        // Update main graph (transformed unit square)
+        updateMainGraph();
+        
+        // Update vectors graph
+        updateVectorsGraph();
+    }
+    
+    // Main graph: transformed unit square
+    function updateMainGraph() {
+        // Original unit square corners
+        const corners = [
+            [0, 0],  // origin
+            [1, 0],  // bottom-right
+            [1, 1],  // top-right
+            [0, 1]   // top-left
+        ];
+        
+        // Transform corners
+        const transformed = corners.map(p => [
+            a * p[0] + b * p[1],
+            c * p[0] + d * p[1]
+        ]);
+        
+        // Close the polygon
+        const x = transformed.map(p => p[0]);
+        const y = transformed.map(p => p[1]);
+        x.push(transformed[0][0]);
+        y.push(transformed[0][1]);
+        
+        const det = calculateDeterminant();
+        const fillColor = getFillColor(det);
+        const lineColor = det > 0 ? '#3B82F6' : (det < 0 ? '#F59E0B' : '#9CA3AF');
+        
+        const trace = {
+            x: x,
+            y: y,
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: lineColor, width: 3 },
+            marker: { color: lineColor, size: 6 },
+            fill: 'toself',
+            fillcolor: fillColor,
+            name: 'রূপান্তরিত আকার (Transformed Shape)'
+        };
+        
+        // Unit square reference
+        const unitSquareTrace = {
+            x: [0, 1, 1, 0, 0],
+            y: [0, 0, 1, 1, 0],
+            type: 'scatter',
+            mode: 'lines',
+            line: { color: '#9CA3AF', width: 1.5, dash: 'dot' },
+            name: 'একক বর্গ (Area = 1)',
+            hoverinfo: 'skip'
+        };
+        
+        // Determine axis limits
+        const allX = [...x, 0, 1];
+        const allY = [...y, 0, 1];
+        const minX = Math.min(-2.5, Math.min(...allX) - 0.5);
+        const maxX = Math.max(3.5, Math.max(...allX) + 0.5);
+        const minY = Math.min(-2.5, Math.min(...allY) - 0.5);
+        const maxY = Math.max(3.5, Math.max(...allY) + 0.5);
+        
+        const layout = {
+            title: {
+                text: `ক্ষেত্রফল (Area) = ${Math.abs(det).toFixed(4)}`,
+                font: { size: 16 }
+            },
+            xaxis: {
+                range: [minX, maxX],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                zerolinewidth: 1,
+                title: 'x'
+            },
+            yaxis: {
+                range: [minY, maxY],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                zerolinewidth: 1,
+                title: 'y',
+                scaleanchor: 'x',
+                scaleratio: 1
+            },
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: getTextColor() },
+            showlegend: true,
+            legend: { x: 0.02, y: 0.98, xanchor: 'left', yanchor: 'top' },
+            margin: { l: 50, r: 50, t: 60, b: 50 }
+        };
+        
+        Plotly.newPlot('main-graph', [trace, unitSquareTrace], layout, { responsive: true });
+    }
+    
+    // Vectors graph (column vectors)
+    function updateVectorsGraph() {
+        // v1 = (a, c), v2 = (b, d)
+        const v1x = a, v1y = c;
+        const v2x = b, v2y = d;
+        
+        const v1Trace = {
+            x: [0, v1x],
+            y: [0, v1y],
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#3B82F6', width: 3 },
+            marker: { color: '#3B82F6', size: 10 },
+            name: 'প্রথম কলাম (a, c)'
+        };
+        
+        const v2Trace = {
+            x: [0, v2x],
+            y: [0, v2y],
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#F59E0B', width: 3 },
+            marker: { color: '#F59E0B', size: 10 },
+            name: 'দ্বিতীয় কলাম (b, d)'
+        };
+        
+        const allX = [0, v1x, v2x];
+        const allY = [0, v1y, v2y];
+        const minX = Math.min(-2, Math.min(...allX) - 0.5);
+        const maxX = Math.max(3, Math.max(...allX) + 0.5);
+        const minY = Math.min(-2, Math.min(...allY) - 0.5);
+        const maxY = Math.max(3, Math.max(...allY) + 0.5);
+        
+        const layout = {
+            title: 'কলাম ভেক্টর দুইটি',
+            xaxis: {
+                range: [minX, maxX],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                title: 'x'
+            },
+            yaxis: {
+                range: [minY, maxY],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                title: 'y',
+                scaleanchor: 'x',
+                scaleratio: 1
+            },
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: getTextColor() },
+            showlegend: true,
+            margin: { l: 50, r: 50, t: 50, b: 50 }
+        };
+        
+        Plotly.newPlot('vectors-graph', [v1Trace, v2Trace], layout, { responsive: true });
+    }
+    
+    // Unit square graph (static)
+    function drawUnitSquare() {
+        const trace = {
+            x: [0, 1, 1, 0, 0],
+            y: [0, 0, 1, 1, 0],
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: { color: '#3B82F6', width: 2 },
+            marker: { color: '#3B82F6', size: 6 },
+            fill: 'toself',
+            fillcolor: 'rgba(59, 130, 246, 0.1)',
+            name: 'একক বর্গ (ক্ষেত্রফল = 1)'
+        };
+        
+        const layout = {
+            title: 'একক বর্গ | Unit Square',
+            xaxis: {
+                range: [-1, 2],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                title: 'x'
+            },
+            yaxis: {
+                range: [-1, 2],
+                gridcolor: 'rgba(128,128,128,0.2)',
+                zerolinecolor: 'rgba(128,128,128,0.5)',
+                title: 'y',
+                scaleanchor: 'x',
+                scaleratio: 1
+            },
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: getTextColor() }
+        };
+        
+        Plotly.newPlot('unit-square-graph', [trace], layout, { responsive: true });
+    }
+    
+    function getFillColor(det) {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (Math.abs(det) < 0.01) {
+            return isDark ? 'rgba(107, 114, 128, 0.3)' : 'rgba(107, 114, 128, 0.2)';
+        } else if (det > 0) {
+            return isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)';
+        } else {
+            return isDark ? 'rgba(245, 158, 11, 0.3)' : 'rgba(245, 158, 11, 0.2)';
+        }
+    }
+    
+    function getTextColor() {
+        const theme = document.documentElement.getAttribute('data-theme') || 'light';
+        return theme === 'dark' ? '#E5E7EB' : '#1F2937';
+    }
+    
+    // Update from sliders
+    function updateFromSliders() {
+        a = parseFloat(sliderA.value);
+        b = parseFloat(sliderB.value);
+        c = parseFloat(sliderC.value);
+        d = parseFloat(sliderD.value);
+        
+        aVal.textContent = a.toFixed(2);
+        bVal.textContent = b.toFixed(2);
+        cVal.textContent = c.toFixed(2);
+        dVal.textContent = d.toFixed(2);
+        
+        updateAllGraphs();
+    }
+    
+    // Set matrix values
+    function setMatrix(newA, newB, newC, newD) {
+        sliderA.value = newA;
+        sliderB.value = newB;
+        sliderC.value = newC;
+        sliderD.value = newD;
+        updateFromSliders();
+    }
+    
+    // Event listeners
+    sliderA.addEventListener('input', updateFromSliders);
+    sliderB.addEventListener('input', updateFromSliders);
+    sliderC.addEventListener('input', updateFromSliders);
+    sliderD.addEventListener('input', updateFromSliders);
+    
+    // Example buttons
+    document.querySelectorAll('.example-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const newA = parseFloat(btn.dataset.a);
+            const newB = parseFloat(btn.dataset.b);
+            const newC = parseFloat(btn.dataset.c);
+            const newD = parseFloat(btn.dataset.d);
+            setMatrix(newA, newB, newC, newD);
+        });
+    });
+    
+    // Formula reveal
+    const formulaBox = document.getElementById('formula-box');
+    let formulaRevealed = false;
+    formulaBox.addEventListener('click', () => {
+        if (!formulaRevealed) {
+            formulaBox.classList.remove('formula-hidden');
+            formulaBox.classList.add('formula-visible');
+            formulaBox.innerHTML = '<div style="font-size: 28px;">det(A) = a × d − b × c</div><div style="font-size: 14px; margin-top: 12px;">ক্ষেত্রফলের পরিবর্তন = |det|</div>';
+            formulaRevealed = true;
+        }
+    });
+    
+    // Initial draws
+    drawUnitSquare();
+    updateFromSliders();
+    initTheme();
+</script>
+</body>
+</html>
