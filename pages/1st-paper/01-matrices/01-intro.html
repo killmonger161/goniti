@@ -103,6 +103,13 @@
             margin-bottom: 24px;
         }
         
+        .two-columns-camera {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
         /* Matrix Display Box */
         .matrix-box {
             background-color: var(--bg-surface);
@@ -208,27 +215,13 @@
             border-color: var(--accent-red);
         }
         
-        /* Preset Buttons */
+        /* Preset Buttons - Hidden */
         .presets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 16px 0;
+            display: none;
         }
         
         .preset-btn {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: 30px;
-            padding: 8px 16px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .preset-btn:hover {
-            background-color: var(--accent-blue-light);
-            border-color: var(--accent-blue);
+            display: none;
         }
         
         /* Explanation Box */
@@ -308,12 +301,20 @@
         }
         
         @media (max-width: 768px) {
-            .two-columns {
+            .char-canvas-matrix-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .two-columns-camera {
                 grid-template-columns: 1fr;
             }
             
             .controls-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .char-controls-compact {
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .matrix-grid .cell input {
@@ -342,6 +343,43 @@
             border-radius: 20px;
             font-size: 12px;
             margin-bottom: 12px;
+        }
+        
+        /* Character mode layout */
+        .char-canvas-matrix-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .char-controls-compact {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+        
+        /* Camera position inputs - hidden */
+        .camera-position-box {
+            display: none;
+        }
+        
+        /* Quick controls - hidden */
+        .quick-controls-box {
+            display: none;
+        }
+        
+        /* Camera reset button positioned */
+        .camera-reset-top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        .canvas-container-camera {
+            position: relative;
         }
     </style>
 </head>
@@ -395,7 +433,10 @@
                     <div class="canvas-container">
                         <canvas id="characterCanvas" width="500" height="400" style="width:100%; height:auto; max-width:500px; aspect-ratio:500/400"></canvas>
                     </div>
-                    
+                </div>
+                
+                <!-- Right: Controls and Info -->
+                <div>
                     <div class="matrix-box">
                         <div class="matrix-title">বর্তমান ট্রান্সফরমেশন ম্যাট্রিক্স</div>
                         <div class="matrix-grid">
@@ -415,36 +456,18 @@
                                 <div class="cell">1</div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Right: Controls and Info -->
-                <div>
-                    <div class="matrix-box">
-                        <div class="matrix-title">🎮 ক্যারেক্টার কন্ট্রোল</div>
-                        <div class="controls-grid">
-                            <button class="ctrl-btn" id="char-up"><i class="fas fa-arrow-up"></i> উপরে</button>
-                            <button class="ctrl-btn" id="char-down"><i class="fas fa-arrow-down"></i> নিচে</button>
-                            <button class="ctrl-btn" id="char-left"><i class="fas fa-arrow-left"></i> বামে</button>
-                            <button class="ctrl-btn" id="char-right"><i class="fas fa-arrow-right"></i> ডানে</button>
-                            <button class="ctrl-btn" id="char-rotate-l"><i class="fas fa-undo-alt"></i> ঘুরাও (বাম)</button>
-                            <button class="ctrl-btn" id="char-rotate-r"><i class="fas fa-redo-alt"></i> ঘুরাও (ডান)</button>
-                            <button class="ctrl-btn" id="char-scale-up"><i class="fas fa-search-plus"></i> বড় করো</button>
-                            <button class="ctrl-btn" id="char-scale-down"><i class="fas fa-search-minus"></i> ছোট করো</button>
-                            <button class="ctrl-btn primary" id="char-reset"><i class="fas fa-sync-alt"></i> রিসেট</button>
-                        </div>
                         
-                        <hr>
-                        
-                        <div class="matrix-title">🎨 প্রিসেট ম্যাট্রিক্স</div>
-                        <div class="presets">
-                            <button class="preset-btn" data-type="identity">অভেদ (Identity)</button>
-                            <button class="preset-btn" data-type="scale2">স্কেল ×২</button>
-                            <button class="preset-btn" data-type="scale05">স্কেল ×০.৫</button>
-                            <button class="preset-btn" data-type="flip-x">ফ্লিপ X</button>
-                            <button class="preset-btn" data-type="flip-y">ফ্লিপ Y</button>
-                            <button class="preset-btn" data-type="rotate45">৪৫° ঘূর্ণন</button>
-                            <button class="preset-btn" data-type="shear">শিয়ার</button>
+                        <div class="matrix-title" style="margin-top: 20px;">🎮 ক্যারেক্টার কন্ট্রোল</div>
+                        <div class="char-controls-compact">
+                            <button class="ctrl-btn" id="char-up"><i class="fas fa-arrow-up"></i></button>
+                            <button class="ctrl-btn" id="char-down"><i class="fas fa-arrow-down"></i></button>
+                            <button class="ctrl-btn" id="char-left"><i class="fas fa-arrow-left"></i></button>
+                            <button class="ctrl-btn" id="char-right"><i class="fas fa-arrow-right"></i></button>
+                            <button class="ctrl-btn" id="char-rotate-l"><i class="fas fa-undo-alt"></i></button>
+                            <button class="ctrl-btn" id="char-rotate-r"><i class="fas fa-redo-alt"></i></button>
+                            <button class="ctrl-btn" id="char-scale-up"><i class="fas fa-search-plus"></i></button>
+                            <button class="ctrl-btn" id="char-scale-down"><i class="fas fa-search-minus"></i></button>
+                            <button class="ctrl-btn primary" id="char-reset"><i class="fas fa-sync-alt"></i></button>
                         </div>
                     </div>
                 </div>
@@ -459,36 +482,18 @@
 
         <!-- ========== 3D CAMERA MODE ========== -->
         <div id="camera-mode" class="mode-content">
-            <div class="two-columns">
+            <div class="two-columns-camera">
                 <!-- Left: 3D Canvas -->
                 <div>
-                    <div class="canvas-container" style="min-height: 400px; position: relative;">
+                    <div class="canvas-container canvas-container-camera" style="min-height: 400px; position: relative;">
                         <div id="three-canvas-container" style="width: 100%; height: 100%; min-height: 400px;"></div>
+                        <button class="ctrl-btn primary camera-reset-top-right" id="cam-reset" style="padding: 8px 16px;"><i class="fas fa-sync-alt"></i></button>
                     </div>
                 </div>
                 
-                <!-- Right: Camera Controls and Matrix -->
+                <!-- Right: Matrix Display -->
                 <div>
                     <div class="matrix-box">
-                        <div class="matrix-title">📷 ক্যামেরা অবস্থান</div>
-                        <div class="live-values">
-                            <div class="live-value">X: <input type="number" id="cam-x" value="5" step="0.1" style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-light);"></div>
-                            <div class="live-value">Y: <input type="number" id="cam-y" value="3" step="0.1" style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-light);"></div>
-                            <div class="live-value">Z: <input type="number" id="cam-z" value="5" step="0.1" style="width: 60px; padding: 4px; border-radius: 4px; border: 1px solid var(--border-light);"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="matrix-box" style="margin-top: 16px;">
-                        <div class="matrix-title">🎮 দ্রুত নিয়ন্ত্রণ</div>
-                        <div class="controls-grid">
-                            <button class="ctrl-btn" id="cam-reset" style="grid-column: 1 / -1;"><i class="fas fa-sync-alt"></i> ক্যামেরা রিসেট</button>
-                            <button class="ctrl-btn" id="cam-zoom-in"><i class="fas fa-search-plus"></i> জুম ইন</button>
-                            <button class="ctrl-btn" id="cam-zoom-out"><i class="fas fa-search-minus"></i> জুম আউট</button>
-                            <button class="ctrl-btn" id="cam-grid-toggle"><i class="fas fa-th"></i> গ্রিড</button>
-                        </div>
-                    </div>
-                    
-                    <div class="matrix-box" style="margin-top: 16px;">
                         <div class="matrix-title">📐 ভিউ ম্যাট্রিক্স (4×4)</div>
                         <div style="font-family: monospace; font-size: 12px; text-align: left; overflow-x: auto;">
                             <div id="view-matrix-display" style="white-space: pre; line-height: 1.4;">
@@ -501,6 +506,10 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Hidden camera controls boxes -->
+            <div class="camera-position-box"></div>
+            <div class="quick-controls-box"></div>
             
             <div class="explanation-box">
                 <h4><i class="fas fa-lightbulb"></i> 3D ক্যামেরা মোড সম্পর্কে</h4>
@@ -850,27 +859,6 @@
     document.getElementById('char-tx')?.addEventListener('input', (e) => { charMatrix.tx = parseFloat(e.target.value); drawCharacter(); });
     document.getElementById('char-ty')?.addEventListener('input', (e) => { charMatrix.ty = parseFloat(e.target.value); drawCharacter(); });
     
-    // Preset for character
-    document.querySelectorAll('.preset-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const type = btn.dataset.type;
-            switch(type) {
-                case 'identity': charMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 }; break;
-                case 'scale2': charMatrix = { a: 2, b: 0, c: 0, d: 2, tx: 0, ty: 0 }; break;
-                case 'scale05': charMatrix = { a: 0.5, b: 0, c: 0, d: 0.5, tx: 0, ty: 0 }; break;
-                case 'flip-x': charMatrix = { a: 1, b: 0, c: 0, d: -1, tx: 0, ty: 0 }; break;
-                case 'flip-y': charMatrix = { a: -1, b: 0, c: 0, d: 1, tx: 0, ty: 0 }; break;
-                case 'rotate45': 
-                    const cos45 = Math.cos(45 * Math.PI/180);
-                    const sin45 = Math.sin(45 * Math.PI/180);
-                    charMatrix = { a: cos45, b: -sin45, c: sin45, d: cos45, tx: 0, ty: 0 }; break;
-                case 'shear': charMatrix = { a: 1, b: 0.5, c: 0.5, d: 1, tx: 0, ty: 0 }; break;
-                default: charMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
-            }
-            drawCharacter();
-        });
-    });
-    
     // ========== 3D CAMERA MODE (THREE.JS) ==========
     let threeScene = null;
     let renderer = null;
@@ -994,9 +982,7 @@
         // Update input fields and matrix display
         function updateCameraInputs() {
             const pos = camera3d.position;
-            document.getElementById('cam-x').value = pos.x.toFixed(2);
-            document.getElementById('cam-y').value = pos.y.toFixed(2);
-            document.getElementById('cam-z').value = pos.z.toFixed(2);
+            // Camera position inputs have been removed - only update matrix display
             
             // Update 4x4 view matrix
             const matrixArray = camera3d.matrixWorldInverse.elements;
@@ -1011,25 +997,7 @@
             document.getElementById('view-matrix-display').innerHTML = lines.join('<br>');
         }
         
-        // Input field listeners
-        document.getElementById('cam-x')?.addEventListener('input', (e) => {
-            const pos = camera3d.position;
-            camera3d.position.set(parseFloat(e.target.value), pos.y, pos.z);
-            cameraControls.update();
-            updateCameraInputs();
-        });
-        document.getElementById('cam-y')?.addEventListener('input', (e) => {
-            const pos = camera3d.position;
-            camera3d.position.set(pos.x, parseFloat(e.target.value), pos.z);
-            cameraControls.update();
-            updateCameraInputs();
-        });
-        document.getElementById('cam-z')?.addEventListener('input', (e) => {
-            const pos = camera3d.position;
-            camera3d.position.set(pos.x, pos.y, parseFloat(e.target.value));
-            cameraControls.update();
-            updateCameraInputs();
-        });
+        // Input field listeners (removed - camera position inputs hidden)
         
         // Control buttons
         document.getElementById('cam-reset')?.addEventListener('click', () => {
@@ -1040,30 +1008,7 @@
             updateCameraInputs();
         });
         
-        document.getElementById('cam-zoom-in')?.addEventListener('click', () => {
-            const pos = camera3d.position;
-            const len = Math.sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
-            const newLen = len * 0.8;
-            const scale = newLen / len;
-            camera3d.position.multiplyScalar(scale);
-            cameraControls.update();
-            updateCameraInputs();
-        });
-        
-        document.getElementById('cam-zoom-out')?.addEventListener('click', () => {
-            const pos = camera3d.position;
-            const len = Math.sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
-            const newLen = len * 1.2;
-            const scale = newLen / len;
-            camera3d.position.multiplyScalar(scale);
-            cameraControls.update();
-            updateCameraInputs();
-        });
-        
-        document.getElementById('cam-grid-toggle')?.addEventListener('click', () => {
-            showGridFlag = !showGridFlag;
-            if (sceneGrid) sceneGrid.visible = showGridFlag;
-        });
+        // Quick control buttons removed (zoom in, zoom out, grid toggle)
         
         // Handle window resize
         function onWindowResize() {
