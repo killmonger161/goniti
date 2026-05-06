@@ -24,6 +24,7 @@
             --border: #e2e8f0;
             --glass: rgba(255, 255, 255, 0.8);
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --viewport-h: 500px;
         }
 
         [data-theme="dark"] {
@@ -40,7 +41,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
         body { background: var(--bg-main); color: var(--text-primary); font-family: 'Inter', sans-serif; line-height: 1.6; }
 
-        /* Pillar 1.2: Navigation Component */
+        /* Pillar 1.2: Navigation */
         .navbar {
             position: sticky; top: 0; z-index: 100;
             background: var(--glass); backdrop-filter: blur(10px);
@@ -55,34 +56,51 @@
 
         /* Layout Architecture */
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
-        
         .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 30px; }
-        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+        
+        @media (max-width: 1024px) { 
+            .main-grid { grid-template-columns: 1fr; } 
+            --viewport-h: 400px;
+        }
 
-        /* Visualizer Box */
+        /* Visualizer Box Fixes (Pillar 1.5) */
         .visualizer-frame {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 24px; overflow: hidden; position: relative; box-shadow: var(--shadow);
+            border-radius: 24px; overflow: hidden; position: relative; 
+            height: var(--viewport-h); box-shadow: var(--shadow);
+            touch-action: none; /* Prevents page scroll while interacting */
         }
-        #viewport { height: 500px; width: 100%; cursor: grab; }
+        #viewport { height: 100%; width: 100%; cursor: grab; }
 
-        /* Data & Explanation Boxes */
+        .btn-reset-stable {
+            position: absolute; bottom: 20px; right: 20px; 
+            padding: 12px 24px; border-radius: 12px; border: none; 
+            background: var(--accent); color: white; cursor: pointer;
+            font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        /* Side Panel & Stability Fixes (Pillar 3.1) */
         .side-panel { display: flex; flex-direction: column; gap: 20px; }
         .card { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; border-radius: 20px; }
         
-        .matrix-box { font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; margin-top: 15px; min-height: 180px; display: flex; align-items: center; justify-content: center; }
+        .matrix-box { 
+            font-family: 'Fira Code', monospace; 
+            background: rgba(0,0,0,0.05); 
+            padding: 15px; border-radius: 12px; margin-top: 15px; 
+            min-height: 200px; display: flex; align-items: center; justify-content: center;
+            font-variant-numeric: tabular-nums; /* Critical for stability */
+            overflow-x: auto;
+        }
         [data-theme="dark"] .matrix-box { background: rgba(255,255,255,0.05); }
 
-        /* Next Page CTA */
+        /* CTA Footer (Pillar 3.8) */
         .cta-footer { margin-top: 50px; text-align: center; padding: 40px; border-top: 1px solid var(--border); }
         .btn-next {
             display: inline-flex; align-items: center; gap: 12px;
             background: var(--accent); color: white; padding: 16px 32px;
             border-radius: 50px; text-decoration: none; font-weight: 600;
-            transition: transform 0.2s;
         }
-        .btn-next:hover { transform: translateX(5px); opacity: 0.9; }
-
     </style>
 </head>
 <body data-theme="light">
@@ -90,44 +108,44 @@
     <nav class="navbar">
         <a href="index.html" class="logo">গনিতি <span style="font-weight: 300;">Goniti</span></a>
         <div class="theme-toggle">
-            <button class="theme-btn active" onclick="setTheme('light')"><i class="fas fa-sun"></i></button>
-            <button class="theme-btn" onclick="setTheme('dark')"><i class="fas fa-moon"></i></button>
+            <button class="theme-btn active" id="light-btn" onclick="setTheme('light')"><i class="fas fa-sun"></i></button>
+            <button class="theme-btn" id="dark-btn" onclick="setTheme('dark')"><i class="fas fa-moon"></i></button>
         </div>
     </nav>
 
     <main class="container">
         <header style="margin-bottom: 2rem;">
-            <h1 style="font-size: 2.5rem; font-family: 'Poppins';">ম্যাট্রিক্স পরিচয়</h1>
-            <p style="color: var(--text-secondary);">3D ক্যামেরা মুভমেন্টের মাধ্যমে ম্যাট্রিক্সের বাস্তব প্রয়োগ দেখুন।</p>
+            <h1 style="font-size: 2.2rem; font-family: 'Poppins';">ম্যাট্রিক্স পরিচয়</h1>
+            <p style="color: var(--text-secondary);">3D স্পেসে ক্যামেরা মুভমেন্টের সাথে ম্যাট্রিক্সের পরিবর্তন লক্ষ্য করুন।</p>
         </header>
 
         <div class="main-grid">
             <!-- 3D Canvas Section -->
             <section class="visualizer-frame">
                 <div id="viewport"></div>
-                <button onclick="resetCamera()" style="position: absolute; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 10px; border: none; background: var(--accent); color: white; cursor: pointer;">
-                    Reset View
+                <button class="btn-reset-stable" onclick="resetCamera()">
+                    <i class="fas fa-sync-alt"></i> রিসেট ভিউ
                 </button>
             </section>
 
             <!-- Explanation & Data Section -->
             <aside class="side-panel">
                 <div class="card">
-                    <h3 style="font-size: 0.9rem; letter-spacing: 1px; color: var(--accent);">VIEW MATRIX</h3>
+                    <h3 style="font-size: 0.8rem; letter-spacing: 1px; color: var(--accent); font-weight: 800;">VIEW MATRIX (4×4)</h3>
                     <div id="matrix-display" class="matrix-box"></div>
                 </div>
 
                 <div class="card">
-                    <h3>💡 এটি কীভাবে কাজ করে?</h3>
+                    <h3>💡 আপনি কী দেখছেন?</h3>
                     <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-secondary);">
-                        ক্যামেরা যখন মহাকাশে ঘোরে, তখন কম্পিউটার একটি ৪×৪ ম্যাট্রিক্স ব্যবহার করে প্রতিটি পয়েন্টের অবস্থান পরিবর্তন করে। ডান পাশের ভ্যালুগুলো লক্ষ্য করুন কীভাবে আপনার মুভমেন্টের সাথে সাথে ম্যাট্রিক্স পরিবর্তিত হচ্ছে।
+                        ক্যামেরা যখন মুভ করে, তখন $4 \times 4$ ম্যাট্রিক্সের ভ্যালুগুলো রিয়েল-টাইমে পরিবর্তিত হয়। এটিই থ্রিডি দুনিয়াকে আপনার টুডি স্ক্রিনে দেখানোর গাণিতিক ভিত্তি।
                     </p>
                 </div>
             </aside>
         </div>
 
         <footer class="cta-footer">
-            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">ম্যাট্রিক্সের ধরনগুলো শিখতে প্রস্তুত?</p>
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">পরবর্তী ধাপে যেতে চান?</p>
             <a href="02-types.html" class="btn-next">
                 পরবর্তী অধ্যায়: ম্যাট্রিক্সের প্রকারভেদ <i class="fas fa-arrow-right"></i>
             </a>
@@ -158,15 +176,20 @@
 
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
             container.appendChild(renderer.domElement);
 
             controls = new OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
 
-            // Add grid and objects
+            // Geometry
             scene.add(new THREE.GridHelper(10, 10, 0x444444, 0x888888));
-            const cube = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshNormalMaterial());
-            scene.add(cube);
+            const box = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 2, 2), 
+                new THREE.MeshNormalMaterial({ wireframe: false })
+            );
+            scene.add(box);
 
             window.addEventListener('resize', onWindowResize);
             animate();
@@ -181,6 +204,7 @@
 
         function renderMatrix() {
             const m = camera.matrixWorldInverse.elements;
+            // Pillar 2.2: Consistent decimal length stops mobile "jitter"
             const latex = `\\begin{bmatrix} 
                 ${m[0].toFixed(2)} & ${m[4].toFixed(2)} & ${m[8].toFixed(2)} & ${m[12].toFixed(2)} \\\\
                 ${m[1].toFixed(2)} & ${m[5].toFixed(2)} & ${m[9].toFixed(2)} & ${m[13].toFixed(2)} \\\\
@@ -209,17 +233,15 @@
     </script>
 
     <script>
-        // Theme Management Logic
         function setTheme(theme) {
             document.body.setAttribute('data-theme', theme);
-            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            document.getElementById('light-btn').classList.toggle('active', theme === 'light');
+            document.getElementById('dark-btn').classList.toggle('active', theme === 'dark');
             localStorage.setItem('goniti-theme', theme);
         }
-
-        // Load saved theme
+        
         const savedTheme = localStorage.getItem('goniti-theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
+        setTheme(savedTheme);
     </script>
 </body>
 </html>
