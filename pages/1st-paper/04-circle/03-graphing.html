@@ -1,11 +1,664 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphing Circles | Goniti</title>
-    <link rel="stylesheet" href="../../../assets/css/common.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>বৃত্ত আঁকা ও লেখচিত্র | Circle Graphing | Goniti</title>
+    
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]})">
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --primary: #3B82F6;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --border: #E2E8F0;
+            --radius: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-page: #020617;
+            --bg-card: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            margin: 0;
+            line-height: 1.6;
+            transition: 0.3s ease;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+
+        /* Navbar */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); text-decoration: none; font-family: 'Poppins', sans-serif; }
+
+        .theme-toggle {
+            background: var(--border);
+            padding: 4px;
+            border-radius: 50px;
+            display: flex;
+            cursor: pointer;
+        }
+
+        .t-btn {
+            border: none; background: none; padding: 6px 15px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .t-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Control Groups */
+        .control-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .control-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .control-item label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        input[type="number"] {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-page);
+            color: var(--text-main);
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .coord-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .coord-inputs input {
+            text-align: center;
+        }
+
+        /* Viz Box */
+        .viz-container {
+            background: #0F172A;
+            border-radius: 12px;
+            width: 100%;
+            aspect-ratio: 16/9;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        canvas { width: 100%; height: 100%; display: block; }
+
+        /* Equation Display */
+        .equation-box {
+            background: var(--bg-page);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid var(--primary);
+        }
+
+        .equation {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: var(--primary);
+        }
+
+        /* Practice Section */
+        .practice-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .practice-item {
+            background: var(--bg-page);
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .practice-question {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .practice-answer {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .practice-answer input {
+            width: 120px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .check-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .check-btn:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .feedback.correct {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--secondary);
+        }
+
+        .feedback.wrong {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent);
+        }
+
+        .hidden { display: none; }
+
+        /* Info Box */
+        .info-box {
+            background: var(--bg-page);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 4px solid var(--primary);
+            font-size: 14px;
+        }
+
+        /* Navigation Footer */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
+            margin: 40px 0 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-solid {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-solid:hover {
+            background: #2563EB;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .control-group { flex-direction: column; }
+            .coord-inputs { flex-direction: column; }
+            .practice-item { flex-direction: column; align-items: flex-start; }
+            .nav-footer { flex-direction: column; }
+            .nav-footer a { text-align: center; justify-content: center; }
+            .equation { font-size: 1.1rem; }
+        }
+
+        .katex { font-size: 1.1em; }
+    </style>
 </head>
 <body>
+
+<div class="container">
+    <nav class="nav">
+        <a href="../../../index.html" class="logo">গনিতি .</a>
+        <div class="theme-toggle" id="themeSwitcher">
+            <button class="t-btn active" data-mode="light">লাইট</button>
+            <button class="t-btn" data-mode="dark">ডার্ক</button>
+        </div>
+    </nav>
+
+    <header style="margin-bottom: 30px;">
+        <span style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">১ম পত্র | অধ্যায় ০৪</span>
+        <h1 style="margin: 10px 0;">বৃত্ত আঁকা ও লেখচিত্র</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">কেন্দ্র $(h, k)$ ও ব্যাসার্ধ $r$ ব্যবহার করে বৃত্তের লেখচিত্র অঙ্কন ও সমীকরণ নির্ণয় শিখুন।</p>
+    </header>
+
+    <!-- Interactive Grapher -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+            প্যারামিটার এক্সপ্লোরার
+        </div>
+        
+        <div class="viz-container">
+            <canvas id="circleCanvas"></canvas>
+        </div>
+
+        <div class="control-group">
+            <div class="control-item">
+                <label>কেন্দ্র X (h) <span id="hValue">0</span></label>
+                <input type="range" id="hSlider" min="-5" max="5" step="0.5" value="0">
+            </div>
+            <div class="control-item">
+                <label>কেন্দ্র Y (k) <span id="kValue">0</span></label>
+                <input type="range" id="kSlider" min="-5" max="5" step="0.5" value="0">
+            </div>
+            <div class="control-item">
+                <label>ব্যাসার্ধ (r) <span id="rValue">3</span></label>
+                <input type="range" id="rSlider" min="0.5" max="6" step="0.5" value="3">
+            </div>
+        </div>
+
+        <div class="equation-box">
+            <div class="equation" id="equationDisplay">
+                $$(x-0)^2 + (y-0)^2 = 3^2$$
+            </div>
+            <div style="margin-top: 8px; font-size: 14px; color: var(--text-muted);" id="expandedDisplay">
+                x² + y² = 9
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-lightbulb"></i> <strong>মনে রাখবেন:</strong> কেন্দ্র $(h,k)$ এবং ব্যাসার্ধ $r$ হলে, সমীকরণ: $(x-h)^2 + (y-k)^2 = r^2$<br>
+            স্লাইডারগুলি সরিয়ে দেখুন কেন্দ্র এবং ব্যাসার্ধ পরিবর্তনের সাথে সাথে লেখচিত্র ও সমীকরণ কীভাবে বদলায়।
+        </div>
+    </div>
+
+    <!-- Try Yourself Section -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-pencil-alt" style="color: var(--secondary);"></i>
+            নিজে চেষ্টা করুন
+        </div>
+
+        <div class="practice-grid">
+            <div class="practice-item">
+                <div class="practice-question">1. কেন্দ্র (2, -1) এবং ব্যাসার্ধ 4 — সমীকরণটি কী?</div>
+                <div class="practice-answer">
+                    <input type="text" id="p1Answer" placeholder="উত্তর">
+                    <button class="check-btn" onclick="checkPractice(1)">চেক</button>
+                </div>
+                <div id="p1Feedback" class="feedback hidden"></div>
+            </div>
+
+            <div class="practice-item">
+                <div class="practice-question">2. $(x-3)^2 + (y+2)^2 = 25$ বৃত্তটির কেন্দ্র ও ব্যাসার্ধ কত?</div>
+                <div class="practice-answer">
+                    <input type="text" id="p2Answer" placeholder="যেমন: (3,-2), r=5">
+                    <button class="check-btn" onclick="checkPractice(2)">চেক</button>
+                </div>
+                <div id="p2Feedback" class="feedback hidden"></div>
+            </div>
+
+            <div class="practice-item">
+                <div class="practice-question">3. কেন্দ্র (0,0) এবং (3,4) বিন্দুগামী — সমীকরণ নির্ণয় করো।</div>
+                <div class="practice-answer">
+                    <input type="text" id="p3Answer" placeholder="উত্তর">
+                    <button class="check-btn" onclick="checkPractice(3)">চেক</button>
+                </div>
+                <div id="p3Feedback" class="feedback hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <footer class="nav-footer">
+        <a href="02-center-origin.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> পেছনে: কেন্দ্র মূলবিন্দুতে</a>
+        <a href="04-center-radius.html" class="btn btn-solid">পরবর্তী: যে কোনো কেন্দ্র <i class="fas fa-arrow-right"></i></a>
+    </footer>
+</div>
+
+<script>
+    // ========== THEME MANAGEMENT ==========
+    const ThemeApp = (() => {
+        const switcher = document.getElementById('themeSwitcher');
+        const btns = switcher.querySelectorAll('.t-btn');
+
+        function set(mode) {
+            document.documentElement.setAttribute('data-theme', mode);
+            localStorage.setItem('math-theme', mode);
+            btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+        }
+
+        switcher.addEventListener('click', (e) => {
+            if(e.target.dataset.mode) set(e.target.dataset.mode);
+        });
+
+        return {
+            init: () => {
+                const saved = localStorage.getItem('math-theme') || 'light';
+                set(saved);
+            }
+        };
+    })();
+
+    // ========== CIRCLE GRAPHING ENGINE ==========
+    const canvas = document.getElementById('circleCanvas');
+    let ctx = canvas?.getContext('2d');
+    
+    const hSlider = document.getElementById('hSlider');
+    const kSlider = document.getElementById('kSlider');
+    const rSlider = document.getElementById('rSlider');
+    const hValue = document.getElementById('hValue');
+    const kValue = document.getElementById('kValue');
+    const rValue = document.getElementById('rValue');
+    const equationDisplay = document.getElementById('equationDisplay');
+    const expandedDisplay = document.getElementById('expandedDisplay');
+
+    let h = 0, k = 0, r = 3;
+    const PX_PER_UNIT = 30;
+
+    function updateDisplays() {
+        hValue.innerText = h.toFixed(1);
+        kValue.innerText = k.toFixed(1);
+        rValue.innerText = r.toFixed(1);
+        
+        const rSquared = (r * r).toFixed(1);
+        
+        // Standard form
+        const hText = h === 0 ? '0' : h > 0 ? `${h}` : `${h}`;
+        const kText = k === 0 ? '0' : k > 0 ? `${k}` : `${k}`;
+        
+        let stdForm = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h).toFixed(1)})^2 + (y ${k >= 0 ? '-' : '+'} ${Math.abs(k).toFixed(1)})^2 = ${r.toFixed(1)}^2`;
+        
+        if (h === 0) stdForm = `x^2 + (y ${k >= 0 ? '-' : '+'} ${Math.abs(k).toFixed(1)})^2 = ${r.toFixed(1)}^2`;
+        if (k === 0) stdForm = `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h).toFixed(1)})^2 + y^2 = ${r.toFixed(1)}^2`;
+        if (h === 0 && k === 0) stdForm = `x^2 + y^2 = ${r.toFixed(1)}^2`;
+        
+        equationDisplay.innerHTML = `$${stdForm}$`;
+        
+        // Expanded form
+        if (h === 0 && k === 0) {
+            expandedDisplay.innerText = `x² + y² = ${rSquared}`;
+        } else {
+            const hTerm = h === 0 ? '' : (h > 0 ? `- ${(2*h).toFixed(1)}x` : `+ ${Math.abs(2*h).toFixed(1)}x`);
+            const kTerm = k === 0 ? '' : (k > 0 ? `- ${(2*k).toFixed(1)}y` : `+ ${Math.abs(2*k).toFixed(1)}y`);
+            const constant = (h*h + k*k - r*r).toFixed(1);
+            expandedDisplay.innerText = `x² + y² ${hTerm} ${kTerm} ${constant >= 0 ? '+' : '-'} ${Math.abs(constant)} = 0`;
+        }
+        
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(equationDisplay, {
+                delimiters: [{left: '$$', right: '$$', display: true}]
+            });
+        }
+    }
+
+    function drawCircle() {
+        if (!ctx) return;
+        
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = 'rgba(128, 128, 128, 0.15)';
+        ctx.lineWidth = 0.5;
+        for (let x = cx % PX_PER_UNIT; x <= canvas.width; x += PX_PER_UNIT) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = cy % PX_PER_UNIT; y <= canvas.height; y += PX_PER_UNIT) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+        
+        // Draw axes
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(0, cy);
+        ctx.lineTo(canvas.width, cy);
+        ctx.stroke();
+        ctx.moveTo(cx, 0);
+        ctx.lineTo(cx, canvas.height);
+        ctx.stroke();
+        
+        // Calculate center pixel position
+        const centerPx = cx + h * PX_PER_UNIT;
+        const centerPy = cy - k * PX_PER_UNIT;
+        const radiusPx = r * PX_PER_UNIT;
+        
+        // Draw circle
+        ctx.beginPath();
+        ctx.arc(centerPx, centerPy, radiusPx, 0, Math.PI * 2);
+        ctx.strokeStyle = '#3B82F6';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // Fill with transparency
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.08)';
+        ctx.fill();
+        
+        // Draw center point
+        ctx.beginPath();
+        ctx.arc(centerPx, centerPy, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#EF4444';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(centerPx, centerPy, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        
+        // Draw radius line
+        ctx.beginPath();
+        ctx.moveTo(centerPx, centerPy);
+        ctx.lineTo(centerPx + radiusPx, centerPy);
+        ctx.strokeStyle = '#3B82F6';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        
+        // Labels
+        ctx.font = '11px Inter';
+        ctx.fillStyle = 'var(--text-muted)';
+        ctx.fillText(`(${h.toFixed(1)}, ${k.toFixed(1)})`, centerPx + 8, centerPy - 5);
+        ctx.fillText(`r = ${r.toFixed(1)}`, centerPx + radiusPx/2 - 15, centerPy - 8);
+        
+        // Axis labels
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillText('O', cx - 12, cy + 4);
+        ctx.fillText('x', canvas.width - 10, cy - 5);
+        ctx.fillText('y', cx + 5, 12);
+    }
+
+    function updateAll() {
+        h = parseFloat(hSlider.value);
+        k = parseFloat(kSlider.value);
+        r = parseFloat(rSlider.value);
+        
+        updateDisplays();
+        drawCircle();
+    }
+
+    hSlider?.addEventListener('input', updateAll);
+    kSlider?.addEventListener('input', updateAll);
+    rSlider?.addEventListener('input', updateAll);
+    window.addEventListener('resize', () => drawCircle());
+
+    // ========== PRACTICE CHECK FUNCTIONS ==========
+    function checkPractice(num) {
+        const feedback = document.getElementById(`p${num}Feedback`);
+        feedback.classList.remove('hidden');
+        
+        if (num === 1) {
+            const answer = document.getElementById('p1Answer').value.trim().replace(/\s/g, '').toLowerCase();
+            if (answer === '(x-2)^2+(y+1)^2=16' || answer === '(x-2)²+(y+1)²=16') {
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> সঠিক! (x-2)² + (y+1)² = 16';
+                feedback.classList.add('correct');
+                feedback.classList.remove('wrong');
+            } else {
+                feedback.innerHTML = '<i class="fas fa-times-circle"></i> সঠিক উত্তর: (x-2)² + (y+1)² = 16';
+                feedback.classList.add('wrong');
+                feedback.classList.remove('correct');
+            }
+        } 
+        else if (num === 2) {
+            const answer = document.getElementById('p2Answer').value.trim().toLowerCase();
+            if (answer === '(3,-2),r=5' || answer === 'r=5,(3,-2)' || answer === 'center(3,-2),r=5') {
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> সঠিক! কেন্দ্র (3, -2), ব্যাসার্ধ 5';
+                feedback.classList.add('correct');
+                feedback.classList.remove('wrong');
+            } else {
+                feedback.innerHTML = '<i class="fas fa-times-circle"></i> সঠিক উত্তর: কেন্দ্র (3, -2), ব্যাসার্ধ 5';
+                feedback.classList.add('wrong');
+                feedback.classList.remove('correct');
+            }
+        }
+        else if (num === 3) {
+            const answer = document.getElementById('p3Answer').value.trim().replace(/\s/g, '').toLowerCase();
+            if (answer === 'x^2+y^2=25' || answer === 'x²+y²=25') {
+                feedback.innerHTML = '<i class="fas fa-check-circle"></i> সঠিক! x² + y² = 25 (r² = 3² + 4² = 25)';
+                feedback.classList.add('correct');
+                feedback.classList.remove('wrong');
+            } else {
+                feedback.innerHTML = '<i class="fas fa-times-circle"></i> সঠিক উত্তর: x² + y² = 25';
+                feedback.classList.add('wrong');
+                feedback.classList.remove('correct');
+            }
+        }
+    }
+
+    window.checkPractice = checkPractice;
+
+    // Initial draw
+    setTimeout(() => {
+        updateAll();
+    }, 100);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        ThemeApp.init();
+    });
+</script>
 </body>
 </html>

@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>কেন্দ্র মূলবিন্দুতে বৃত্ত | Circle Equation | Goniti</title>
+    <title>মূলবিন্দুতে কেন্দ্র | Circle at Origin | Goniti</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- KaTeX for Performance -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]})">
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg-primary: #FAFAFA;
@@ -30,8 +36,9 @@
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --transition: all 0.2s ease;
+            --radius: 20px;
         }
-        
+
         [data-theme="dark"] {
             --bg-primary: #121212;
             --bg-secondary: #1E1E1E;
@@ -46,9 +53,9 @@
             --accent-blue-hover: #3B82F6;
             --accent-blue-light: #1E3A5F;
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
@@ -57,9 +64,10 @@
             font-size: 16px;
             transition: var(--transition);
         }
-        
-        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-        
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        /* ========== NAVBAR ========== */
         .navbar {
             position: sticky;
             top: 0;
@@ -68,7 +76,7 @@
             padding: 12px 0;
             z-index: 100;
         }
-        
+
         .navbar .container {
             display: flex;
             justify-content: space-between;
@@ -76,7 +84,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        
+
         .logo {
             display: flex;
             align-items: baseline;
@@ -87,10 +95,10 @@
             color: var(--text-primary);
             font-family: 'Poppins', sans-serif;
         }
-        
+
         .logo-bn { font-size: 24px; }
         .logo-en { font-size: 18px; font-weight: 500; }
-        
+
         .back-link {
             color: var(--accent-blue);
             text-decoration: none;
@@ -99,7 +107,7 @@
             align-items: center;
             gap: 8px;
         }
-        
+
         .theme-toggle {
             display: flex;
             gap: 4px;
@@ -108,7 +116,7 @@
             border-radius: 40px;
             padding: 4px;
         }
-        
+
         .theme-btn {
             background: none;
             border: none;
@@ -119,13 +127,14 @@
             color: var(--text-secondary);
             transition: var(--transition);
         }
-        
+
         .theme-btn.active {
             background-color: var(--accent-blue);
             color: white;
         }
-        
-        .hero { padding: 30px 0 20px 0; }
+
+        /* ========== PAGE HEADER ========== */
+        .page-header { margin-bottom: 30px; padding-bottom: 20px; }
         
         .chapter-badge {
             display: inline-block;
@@ -137,7 +146,7 @@
             font-weight: 500;
             margin-bottom: 16px;
         }
-        
+
         h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 32px;
@@ -148,237 +157,205 @@
             background-clip: text;
             color: transparent;
         }
-        
-        .hero-description {
-            font-size: 15px;
+
+        .subtitle {
+            font-size: 16px;
             color: var(--text-secondary);
         }
-        
+
+        /* ========== CARDS ========== */
         .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
             padding: 24px;
-            margin: 20px 0;
+            border: 1px solid var(--border-light);
+            margin-bottom: 24px;
             box-shadow: var(--shadow-sm);
         }
-        
+
         .card-title {
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
-        .canvas-container {
-            background: linear-gradient(135deg, #0a0e27 0%, #141a3a 100%);
-            border-radius: 20px;
-            padding: 16px;
-            position: relative;
+
+        /* Challenge Card */
+        .challenge-card {
+            border: 2px solid var(--accent-blue);
+            background: var(--accent-blue-light);
         }
-        
-        canvas {
-            display: block;
-            margin: 0 auto;
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-medium);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 14px;
+            flex-grow: 1;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--accent-blue-light);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-solid {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-solid:hover {
+            background: var(--accent-blue-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-blue-light);
+        }
+
+        /* ========== VIZ BOX ========== */
+        .viz-box {
+            background: #0F172A;
             border-radius: 16px;
             width: 100%;
-            height: auto;
-            background: radial-gradient(circle at 30% 40%, #1a2040, #0a0e27);
+            aspect-ratio: 16/9;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .slider-container {
-            margin: 20px 0;
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
-        
-        .slider-container label {
+
+        .controls {
+            margin-top: 20px;
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
+            align-items: center;
+            gap: 20px;
+            background: var(--bg-surface);
+            padding: 16px;
+            border-radius: 16px;
+            flex-wrap: wrap;
+        }
+
+        .controls label {
             font-weight: 500;
         }
-        
+
         input[type="range"] {
-            width: 100%;
+            flex: 1;
+            min-width: 150px;
             height: 6px;
             -webkit-appearance: none;
             background: var(--border-medium);
             border-radius: 3px;
-            outline: none;
         }
-        
+
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: var(--accent-blue);
             cursor: pointer;
             border: 2px solid white;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        
-        .equation-box {
-            background-color: var(--bg-surface);
+
+        .formula-box {
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 20px;
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-family: monospace;
+            background: var(--bg-surface);
+            border-radius: 16px;
+            margin-top: 20px;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .feedback.correct {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .feedback.wrong {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+            border-left: 3px solid var(--accent-orange);
+        }
+
+        .hidden { display: none; }
+
+        /* ========== DERIVATION BOX ========== */
+        .derivation-box {
+            background: var(--bg-surface);
             border-radius: 16px;
             padding: 20px;
             text-align: center;
-            margin: 16px 0;
-            border: 2px solid var(--accent-blue);
+            margin: 20px 0;
         }
-        
-        .equation {
-            font-size: 28px;
-            font-weight: 700;
-            font-family: monospace;
-            color: var(--accent-blue);
-        }
-        
-        .equation-small {
-            font-size: 18px;
-            font-family: monospace;
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
-        
-        .stats-row {
-            display: flex;
-            gap: 16px;
-            margin: 16px 0;
-        }
-        
-        .stat-card {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background-color: var(--bg-surface);
-            border-radius: 16px;
-            border: 1px solid var(--border-light);
-        }
-        
-        .stat-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            font-family: monospace;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-        
-        /* Gamified Reveal Box */
-        .guess-box {
-            background: linear-gradient(135deg, var(--accent-blue-light), var(--bg-surface));
-            border-radius: 20px;
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-green);
             padding: 16px;
-            margin: 16px 0;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            margin-top: 16px;
         }
-        
-        .guess-box:hover {
-            transform: scale(1.01);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .guess-question {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .guess-answer {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            font-family: monospace;
-            display: none;
-        }
-        
-        .guess-answer.show {
-            display: block;
-        }
-        
-        .guess-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        
-        /* Real World Box */
-        .realworld-box {
-            background-color: var(--bg-surface);
-            border-radius: 16px;
-            padding: 16px;
-            margin: 16px 0;
+
+        /* ========== NAV FOOTER ========== */
+        .nav-footer {
             display: flex;
-            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-light);
             gap: 16px;
             flex-wrap: wrap;
         }
-        
-        .realworld-icon {
-            font-size: 40px;
-            color: var(--accent-blue);
-        }
-        
-        .realworld-text {
-            flex: 1;
-            font-size: 14px;
-        }
-        
-        .help-box {
-            background-color: var(--accent-blue-light);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 4px solid var(--accent-blue);
-        }
-        
-        .help-box h4 {
-            margin-bottom: 12px;
-            color: var(--accent-blue);
-            font-size: 16px;
-        }
-        
-        .help-box p {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        
-        .next-section {
-            text-align: center;
-            margin: 30px 0 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-light);
-        }
-        
-        .next-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--accent-blue);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-        
-        .next-btn:hover {
-            background-color: var(--accent-blue-hover);
-            transform: translateY(-2px);
-        }
-        
+
         .footer {
             padding: 30px 0 20px;
             text-align: center;
@@ -387,34 +364,20 @@
             font-size: 12px;
             margin-top: 20px;
         }
-        
-        .info-note {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 12px;
-        }
-        
-        hr { border-color: var(--border-light); margin: 16px 0; }
-        
+
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .container { padding: 0 16px; }
-            h1 { font-size: 26px; }
+            h1 { font-size: 28px; }
             .card { padding: 20px; }
-            .equation { font-size: 22px; }
-            .stats-row { flex-direction: column; gap: 8px; }
-            .realworld-box { flex-direction: column; text-align: center; }
+            .card-title { font-size: 18px; }
+            .formula-box { font-size: 1.2rem; }
+            .navbar .container { flex-direction: column; text-align: center; }
+            .input-group { flex-direction: column; }
+            .btn { text-align: center; justify-content: center; }
         }
-        
-        @keyframes movePoint {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .moving-point {
-            animation: movePoint 4s linear infinite;
-            transform-origin: center;
-        }
+
+        .katex { font-size: 1.1em; }
     </style>
 </head>
 <body>
@@ -426,7 +389,7 @@
             <span class="logo-en">Goniti</span>
         </a>
         <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-            <a href="../../../index.html" class="back-link"><i class="fas fa-arrow-left"></i> সব অধ্যায়</a>
+            <a href="01-intro.html" class="back-link"><i class="fas fa-arrow-left"></i> আগের অধ্যায়</a>
             <div class="theme-toggle">
                 <button class="theme-btn active" data-theme="light"><i class="fas fa-sun"></i> লাইট</button>
                 <button class="theme-btn" data-theme="dark"><i class="fas fa-moon"></i> ডার্ক</button>
@@ -436,103 +399,80 @@
     </div>
 </nav>
 
-<main>
-    <div class="container">
-        <!-- Hero -->
-        <div class="hero">
-            <span class="chapter-badge"><i class="fas fa-circle"></i> ১ম পত্র | অধ্যায় ০৪: বৃত্ত</span>
-            <h1>কেন্দ্র (0,0) হলে বৃত্তের সমীকরণ</h1>
-            <p class="hero-description">
-                নিচের বৃত্তটি দেখুন। স্লাইডার সরান। দেখুন কীভাবে x² + y² = r² হয়।
-            </p>
+<div class="container">
+    <header class="page-header">
+        <span class="chapter-badge"><i class="fas fa-circle"></i> ১ম পত্র | অধ্যায় ০৪: বৃত্ত</span>
+        <h1>মূলবিন্দুতে কেন্দ্র ও বৃত্তের সমীকরণ</h1>
+        <p class="subtitle">শিখন লক্ষ্য: মূলবিন্দু $(0,0)$ কেন্দ্রবিশিষ্ট বৃত্তের সাধারণ সমীকরণ $x^2 + y^2 = r^2$ প্রতিষ্ঠা করা।</p>
+    </header>
+
+    <!-- Pillar 3.2: Try-First (Desirable Difficulty) -->
+    <section class="card challenge-card">
+        <div class="card-title">
+            <i class="fas fa-brain"></i> আগে নিজে চেষ্টা করো
+        </div>
+        <p>একটি বৃত্তের কেন্দ্র মূলবিন্দু $(0,0)$ এবং ব্যাসার্ধ $r=5$ একক। বৃত্তের ওপর যেকোনো একটি বিন্দু $P(x,y)$ হলে, পিথাগোরাসের উপপাদ্য অনুযায়ী $x, y$ এবং $5$ এর মধ্যে সম্পর্কটি কী হবে?</p>
+        <div class="input-group">
+            <input type="text" id="userGuess" placeholder="যেমন: x^2 + y^2 = 25">
+            <button class="btn btn-solid" onclick="checkGuess()">চেক করো</button>
+        </div>
+        <div id="guessFeedback" class="feedback hidden"></div>
+    </section>
+
+    <!-- Interactive Explorer -->
+    <section class="card">
+        <div class="card-title">
+            <i class="fas fa-chart-line"></i> প্যারামিটার এক্সপ্লোরার
+        </div>
+        <p>স্লাইডারটি ব্যবহার করে ব্যাসার্ধ পরিবর্তন করো এবং লক্ষ্য করো সমীকরণটি কীভাবে পরিবর্তিত হচ্ছে:</p>
+        
+        <div class="viz-box">
+            <canvas id="circleCanvas"></canvas>
         </div>
 
-        <!-- Main Card -->
-        <div class="card">
-            <!-- Canvas with Circle + Triangle + Moving Point -->
-            <div class="canvas-container">
-                <canvas id="circleCanvas" width="500" height="400" style="width:100%; height:auto; aspect-ratio:500/400; display:block;"></canvas>
-            </div>
-            
-            <!-- Slider -->
-            <div class="slider-container">
-                <label>
-                    <span><i class="fas fa-expand-alt"></i> ব্যাসার্ধ (Radius) r</span>
-                    <span id="radiusValue">2.50</span>
-                </label>
-                <input type="range" id="radiusSlider" min="0.5" max="4.5" step="0.05" value="2.5">
-            </div>
-            
-            <!-- Equation Display -->
-            <div class="equation-box">
-                <div class="equation" id="equationDisplay">x² + y² = (2.5)²</div>
-                <div class="equation-small" id="equationSimple">x² + y² = 6.25</div>
-            </div>
-            
-            <!-- Stats Side by Side -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-value" id="rStat">2.50</div>
-                    <div class="stat-label">ব্যাসার্ধ (r)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="rSquareStat">6.25</div>
-                    <div class="stat-label">r²</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="pointCoord">(2.50, 0)</div>
-                    <div class="stat-label">ঘূর্ণায়মান বিন্দু</div>
-                </div>
-            </div>
-            
-            <!-- Idea 5: Gamified Reveal -->
-            <div class="guess-box" id="guessBox">
-                <div class="guess-question">
-                    <i class="fas fa-question-circle"></i> r = <span id="currentRForGuess">2.50</span> হলে, x² + y² = কত হবে?
-                </div>
-                <div class="guess-answer" id="guessAnswer">
-                    x² + y² = <span id="revealedAnswer">6.25</span>
-                </div>
-                <div class="guess-hint">
-                    ✨ উত্তর জানতে ক্লিক করুন
-                </div>
-            </div>
-            
-            <!-- Idea 4: GPS Real World Example -->
-            <div class="realworld-box">
-                <div class="realworld-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="realworld-text">
-                    <strong>📱 বাস্তব উদাহরণ:</strong> আপনার ফোনের GPS যদি বলে আপনি কেন্দ্র থেকে <span id="gpsRadius">2.50</span> km দূরে, তাহলে আপনি যেকোনো জায়গায় থাকতে পারেন যেখানে 
-                    <strong>x² + y² = <span id="gpsRSquare">6.25</span></strong>
-                </div>
-            </div>
+        <div class="controls">
+            <label for="radiusRange">ব্যাসার্ধ ($r$): <span id="rLabel">5</span></label>
+            <input type="range" id="radiusRange" min="1" max="10" step="0.5" value="5">
+        </div>
+
+        <div class="formula-box" id="liveFormula">
+            $$x^2 + y^2 = 25$$
+        </div>
+    </section>
+
+    <!-- Formal Derivation -->
+    <section class="card">
+        <div class="card-title">
+            <i class="fas fa-calculator"></i> গাণিতিক প্রতিপাদন (Derivation)
         </div>
         
-        <!-- Simple Explanation -->
-        <div class="help-box">
-            <h4><i class="fas fa-lightbulb"></i> সহজ ভাষায়</h4>
-            <p><strong>পীথাগোরাসের সূত্র থেকেই বৃত্তের সমীকরণ আসে!</strong></p>
-            <p>ডানদিকের ত্রিভুজটি দেখুন:</p>
-            <ul style="margin-left: 24px; margin-top: 8px;">
-                <li>নিচের বাহু = x (অনুভূমিক দূরত্ব)</li>
-                <li>পাশের বাহু = y (উল্লম্ব দূরত্ব)</li>
-                <li>তির্যক বাহু = r (ব্যাসার্ধ)</li>
-            </ul>
-            <p style="margin-top: 10px;">পীথাগোরাসের সূত্রানুযায়ী: <strong>x² + y² = r²</strong></p>
-            <p style="margin-top: 8px;">✨ <strong>মনে রাখবেন:</strong> r² বসে, শুধু r বসে না!</p>
+        <p>ধরি, বৃত্তের কেন্দ্র $O(0,0)$ এবং ব্যাসার্ধ $r$। বৃত্তের পরিধির ওপর যেকোনো বিন্দু $P(x,y)$।</p>
+        <p>মূলবিন্দু থেকে $P$ বিন্দুর দূরত্ব সূত্রের সাহায্যে:</p>
+        
+        <div class="derivation-box">
+            $$
+            \begin{align}
+                OP &= r \\
+                \sqrt{(x-0)^2 + (y-0)^2} &= r \\
+                x^2 + y^2 &= r^2 \quad \text{[উভয়পক্ষকে বর্গ করে]}
+            \end{align}
+            $$
         </div>
         
-        <!-- Next Button -->
-        <div class="next-section">
-            <a href="03-graphing.html" class="next-btn">
-                <span>পরবর্তী: বৃত্ত আঁকা ও লেখচিত্র</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
+        <div class="success-box">
+            <strong><i class="fas fa-check-circle"></i> সিদ্ধান্ত:</strong> মূলবিন্দুতে কেন্দ্রবিশিষ্ট বৃত্তের সমীকরণ $x^2 + y^2 = r^2$
         </div>
-    </div>
-</main>
+        
+        <div style="margin-top: 16px; padding: 12px; background: var(--accent-blue-light); border-radius: 12px; font-size: 13px;">
+            <i class="fas fa-lightbulb"></i> <strong>মনে রাখবেন:</strong> এখানে $r^2$ বসে, শুধু $r$ বসে না!
+        </div>
+    </section>
+
+    <footer class="nav-footer">
+        <a href="01-intro.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> পেছনে: বৃত্ত পরিচয়</a>
+        <a href="03-graphing.html" class="btn btn-solid">পরবর্তী: গ্রাফিং প্র্যাকটিস <i class="fas fa-arrow-right"></i></a>
+    </footer>
+</div>
 
 <footer class="footer">
     <div class="container">
@@ -541,7 +481,7 @@
 </footer>
 
 <script>
-    // ========== THEME ==========
+    // ========== THEME MANAGEMENT ==========
     function initTheme() {
         const savedTheme = localStorage.getItem('goniti-theme') || 'light';
         setTheme(savedTheme);
@@ -559,7 +499,8 @@
             document.documentElement.setAttribute('data-theme', theme);
         }
         localStorage.setItem('goniti-theme', theme);
-        drawCircle();
+        // Redraw canvas if exists
+        if (typeof draw === 'function') draw();
     }
     
     document.querySelectorAll('.theme-btn').forEach(btn => {
@@ -568,220 +509,101 @@
             setTheme(theme);
             document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            drawCircle();
+            if (typeof draw === 'function') draw();
         });
     });
     
-    // ========== CANVAS SETUP ==========
+    // ========== CIRCLE APP ==========
     const canvas = document.getElementById('circleCanvas');
     let ctx = canvas?.getContext('2d');
-    canvas.width = 500;
-    canvas.height = 400;
+    const slider = document.getElementById('radiusRange');
+    const rLabel = document.getElementById('rLabel');
+    const formulaDiv = document.getElementById('liveFormula');
     
-    let currentRadius = 2.5;
-    let animationAngle = 0;
-    let animationId = null;
+    const scale = 25; // 1 unit = 25px
     
-    const CENTER_X = 250;
-    const CENTER_Y = 200;
-    const PX_PER_UNIT = 38;
-    
-    // ========== UPDATE DISPLAYS ==========
-    function updateDisplays() {
-        const rSquared = (currentRadius * currentRadius).toFixed(2);
-        document.getElementById('radiusValue').innerHTML = currentRadius.toFixed(2);
-        document.getElementById('rStat').innerHTML = currentRadius.toFixed(2);
-        document.getElementById('rSquareStat').innerHTML = rSquared;
-        document.getElementById('equationDisplay').innerHTML = `x² + y² = (${currentRadius.toFixed(2)})²`;
-        document.getElementById('equationSimple').innerHTML = `x² + y² = ${rSquared}`;
-        document.getElementById('currentRForGuess').innerHTML = currentRadius.toFixed(2);
-        document.getElementById('revealedAnswer').innerHTML = rSquared;
-        document.getElementById('gpsRadius').innerHTML = currentRadius.toFixed(2);
-        document.getElementById('gpsRSquare').innerHTML = rSquared;
-    }
-    
-    // ========== DRAW CIRCLE + TRIANGLE + MOVING POINT ==========
-    function drawCircle() {
+    function draw() {
         if (!ctx) return;
         
-        const w = canvas.width;
-        const h = canvas.height;
-        const radiusPx = currentRadius * PX_PER_UNIT;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const r = parseFloat(slider.value);
         
-        ctx.clearRect(0, 0, w, h);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Grid
-        ctx.strokeStyle = 'rgba(128, 128, 128, 0.12)';
-        ctx.lineWidth = 0.5;
-        for (let x = 0; x <= w; x += PX_PER_UNIT) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, h);
-            ctx.stroke();
-        }
-        for (let y = 0; y <= h; y += PX_PER_UNIT) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(w, y);
-            ctx.stroke();
-        }
-        
-        // Axes
+        // Draw Axes
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.lineWidth = 1.5;
-        ctx.moveTo(0, CENTER_Y);
-        ctx.lineTo(w, CENTER_Y);
-        ctx.stroke();
-        ctx.moveTo(CENTER_X, 0);
-        ctx.lineTo(CENTER_X, h);
+        ctx.moveTo(0, cy); ctx.lineTo(canvas.width, cy);
+        ctx.moveTo(cx, 0); ctx.lineTo(cx, canvas.height);
         ctx.stroke();
         
         // Draw Circle
-        ctx.beginPath();
-        ctx.arc(CENTER_X, CENTER_Y, radiusPx, 0, 2 * Math.PI);
         ctx.strokeStyle = '#3B82F6';
         ctx.lineWidth = 3;
-        ctx.stroke();
-        
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        ctx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.06)';
-        ctx.fill();
-        
-        // ========== RIGHT TRIANGLE (x, y, r) ==========
-        // For demonstration, we show triangle at angle based on animation
-        // Using a moving point to show x and y changing
-        
-        // Calculate moving point position
-        const pointAngle = animationAngle * Math.PI / 180;
-        const pointX = CENTER_X + radiusPx * Math.cos(pointAngle);
-        const pointY = CENTER_Y + radiusPx * Math.sin(pointAngle);
-        const horizontalX = CENTER_X + radiusPx * Math.cos(pointAngle);
-        const horizontalY = CENTER_Y;
-        const verticalX = CENTER_X;
-        const verticalY = CENTER_Y + radiusPx * Math.sin(pointAngle);
-        
-        // Draw right triangle (dashed lines)
         ctx.beginPath();
-        ctx.moveTo(CENTER_X, CENTER_Y);
-        ctx.lineTo(pointX, pointY);
-        ctx.strokeStyle = '#F59E0B';
-        ctx.lineWidth = 2.5;
-        ctx.setLineDash([]);
+        ctx.arc(cx, cy, r * scale, 0, Math.PI * 2);
         ctx.stroke();
         
-        // Horizontal leg (x)
+        // Draw Radius Line to a point (45 degrees)
+        ctx.setLineDash([5, 5]);
         ctx.beginPath();
-        ctx.moveTo(CENTER_X, CENTER_Y);
-        ctx.lineTo(horizontalX, horizontalY);
-        ctx.strokeStyle = '#10B981';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + r * scale * Math.cos(Math.PI/4), cy - r * scale * Math.sin(Math.PI/4));
         ctx.stroke();
-        
-        // Vertical leg (y)
-        ctx.beginPath();
-        ctx.moveTo(horizontalX, horizontalY);
-        ctx.lineTo(pointX, pointY);
-        ctx.strokeStyle = '#EC4899';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
-        ctx.stroke();
-        
         ctx.setLineDash([]);
         
-        // Labels on triangle
-        ctx.font = '12px monospace';
-        ctx.fillStyle = '#10B981';
-        ctx.fillText('x', CENTER_X + (pointX - CENTER_X)/2 - 10, CENTER_Y - 5);
-        ctx.fillStyle = '#EC4899';
-        ctx.fillText('y', pointX + 5, CENTER_Y + (pointY - CENTER_Y)/2);
-        ctx.fillStyle = '#F59E0B';
-        ctx.fillText('r', CENTER_X + (pointX - CENTER_X)/3, CENTER_Y + (pointY - CENTER_Y)/3);
-        
-        // ========== Idea 1: Moving Point on Circle ==========
+        // Draw point at the end of radius
         ctx.beginPath();
-        ctx.arc(pointX, pointY, 6, 0, 2 * Math.PI);
+        ctx.arc(cx + r * scale * Math.cos(Math.PI/4), cy - r * scale * Math.sin(Math.PI/4), 5, 0, 2 * Math.PI);
         ctx.fillStyle = '#F59E0B';
         ctx.fill();
-        ctx.beginPath();
-        ctx.arc(pointX, pointY, 2.5, 0, 2 * Math.PI);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
         
-        // Update point coordinates display
-        const actualX = (Math.cos(pointAngle) * currentRadius).toFixed(2);
-        const actualY = (Math.sin(pointAngle) * currentRadius).toFixed(2);
-        document.getElementById('pointCoord').innerHTML = `(${actualX}, ${actualY})`;
+        // Update UI
+        const rValue = r.toFixed(1);
+        const rSquared = (r * r).toFixed(1);
+        rLabel.innerText = rValue;
+        formulaDiv.innerHTML = `$$x^2 + y^2 = ${rSquared}$$`;
         
-        // ========== Idea 2: Square showing r² ==========
-        // Draw a small square at bottom-right corner showing area = r²
-        const squareSize = 30;
-        const squareX = w - 55;
-        const squareY = h - 55;
-        
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
-        ctx.fillRect(squareX, squareY, squareSize, squareSize);
-        ctx.strokeStyle = '#3B82F6';
-        ctx.lineWidth = 1.5;
-        ctx.strokeRect(squareX, squareY, squareSize, squareSize);
-        
-        ctx.font = '9px monospace';
-        ctx.fillStyle = '#3B82F6';
-        ctx.fillText(`r² = ${(currentRadius * currentRadius).toFixed(2)}`, squareX - 5, squareY - 3);
-        ctx.fillText('ক্ষেত্রফল', squareX + 2, squareY + squareSize + 12);
-        
-        // Center point
-        ctx.beginPath();
-        ctx.arc(CENTER_X, CENTER_Y, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = '#EF4444';
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(CENTER_X, CENTER_Y, 2, 0, 2 * Math.PI);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
-        
-        // Labels
-        ctx.fillStyle = 'var(--text-muted)';
-        ctx.font = '10px Inter';
-        ctx.fillText('O(0,0)', CENTER_X - 30, CENTER_Y + 4);
-        ctx.fillText('x', w - 10, CENTER_Y - 5);
-        ctx.fillText('y', CENTER_X + 5, 12);
-        
-        updateDisplays();
-    }
-    
-    // ========== ANIMATION LOOP ==========
-    function animate() {
-        animationAngle = (animationAngle + 1.5) % 360;
-        drawCircle();
-        animationId = requestAnimationFrame(animate);
-    }
-    
-    // ========== RADIUS SLIDER ==========
-    const radiusSlider = document.getElementById('radiusSlider');
-    radiusSlider?.addEventListener('input', (e) => {
-        currentRadius = parseFloat(e.target.value);
-        drawCircle();
-    });
-    
-    // ========== GUESS BOX REVEAL (Gamified) ==========
-    const guessBox = document.getElementById('guessBox');
-    const guessAnswer = document.getElementById('guessAnswer');
-    let guessed = false;
-    
-    guessBox?.addEventListener('click', () => {
-        if (!guessed) {
-            guessAnswer.classList.add('show');
-            guessBox.style.backgroundColor = 'var(--accent-blue-light)';
-            guessed = true;
+        // Re-render KaTeX
+        if (typeof renderMathInElement !== 'undefined') {
+            renderMathInElement(formulaDiv, {
+                delimiters: [{left: '$$', right: '$$', display: true}]
+            });
         }
-    });
+    }
     
-    // Initial draw and start animation
-    drawCircle();
-    animate();
-    initTheme();
+    slider?.addEventListener('input', draw);
+    window.addEventListener('resize', draw);
+    
+    // Guess Check Function
+    function checkGuess() {
+        const input = document.getElementById('userGuess').value.replace(/\s/g, '').toLowerCase();
+        const feedback = document.getElementById('guessFeedback');
+        feedback.classList.remove('hidden');
+        
+        if (input === 'x^2+y^2=25' || input === 'x2+y2=25' || input === 'x²+y²=25') {
+            feedback.innerHTML = '<i class="fas fa-check-circle"></i> চমৎকার! তুমি পিথাগোরাসের সম্পর্কটি ধরতে পেরেছো।';
+            feedback.classList.add('correct');
+            feedback.classList.remove('wrong');
+        } else {
+            feedback.innerHTML = '<i class="fas fa-question-circle"></i> আরেকটু ভাবো! মূলবিন্দু থেকে (x,y) এর দূরত্বের বর্গ হবে ব্যাসার্ধের বর্গের সমান। সূত্র: x² + y² = 25';
+            feedback.classList.add('wrong');
+            feedback.classList.remove('correct');
+        }
+    }
+    
+    // Expose for inline onclick
+    window.checkGuess = checkGuess;
+    
+    // Initial draw
+    document.addEventListener('DOMContentLoaded', () => {
+        draw();
+        initTheme();
+    });
 </script>
 </body>
 </html>

@@ -5,890 +5,397 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <title>বৃত্ত পরিচয় | Circle Introduction | Goniti</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]})">
+    </script>
     
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-primary: #FAFAFA;
-            --bg-secondary: #FFFFFF;
+            --bg-page: #F8FAFC;
             --bg-card: #FFFFFF;
-            --bg-surface: #F3F4F6;
-            --text-primary: #1F2937;
-            --text-secondary: #4B5563;
-            --text-muted: #6B7280;
-            --border-light: #E5E7EB;
-            --border-medium: #D1D5DB;
-            --accent-blue: #3B82F6;
-            --accent-blue-hover: #2563EB;
-            --accent-blue-light: #EFF6FF;
-            --accent-purple: #8B5CF6;
-            --accent-green: #10B981;
-            --accent-orange: #F59E0B;
-            --accent-red: #EF4444;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --transition: all 0.2s ease;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --primary: #3B82F6;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --border: #E2E8F0;
+            --radius: 16px;
         }
-        
+
         [data-theme="dark"] {
-            --bg-primary: #121212;
-            --bg-secondary: #1E1E1E;
-            --bg-card: #1E1E1E;
-            --bg-surface: #2D2D2D;
-            --text-primary: #E5E7EB;
-            --text-secondary: #9CA3AF;
-            --text-muted: #6B7280;
-            --border-light: #2D2D2D;
-            --border-medium: #404040;
-            --accent-blue: #60A5FA;
-            --accent-blue-hover: #3B82F6;
-            --accent-blue-light: #1E3A5F;
+            --bg-page: #020617;
+            --bg-card: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            margin: 0;
             line-height: 1.6;
-            font-size: 16px;
-            transition: var(--transition);
+            transition: 0.3s ease;
         }
-        
-        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
-        
-        .navbar {
-            position: sticky;
-            top: 0;
-            background-color: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-light);
-            padding: 12px 0;
-            z-index: 100;
-        }
-        
-        .navbar .container {
+
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+        /* Navbar */
+        .nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
         }
-        
-        .logo {
+
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); text-decoration: none; font-family: 'Poppins', sans-serif; }
+
+        .theme-toggle {
+            background: var(--border);
+            padding: 4px;
+            border-radius: 50px;
             display: flex;
-            align-items: baseline;
-            gap: 4px;
-            font-size: 24px;
-            font-weight: 700;
-            text-decoration: none;
-            color: var(--text-primary);
-            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
         }
-        
-        .logo-bn { font-size: 24px; }
-        .logo-en { font-size: 18px; font-weight: 500; }
-        
-        .back-link {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 14px;
+
+        .t-btn {
+            border: none; background: none; padding: 6px 15px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .t-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        
-        .theme-toggle {
-            display: flex;
-            gap: 4px;
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: 40px;
-            padding: 4px;
-        }
-        
-        .theme-btn {
-            background: none;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 32px;
-            cursor: pointer;
-            font-size: 13px;
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-        
-        .theme-btn.active {
-            background-color: var(--accent-blue);
-            color: white;
-        }
-        
-        .hero { padding: 40px 0 20px 0; }
-        
-        .chapter-badge {
-            display: inline-block;
-            background-color: var(--accent-blue-light);
-            color: var(--accent-blue);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-        
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .hero-description {
-            font-size: 16px;
-            color: var(--text-secondary);
-            max-width: 700px;
-        }
-        
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 24px;
-            margin: 24px 0;
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .card-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .canvas-container {
-            background: linear-gradient(135deg, #0a0e27 0%, #141a3a 100%);
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-        
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 16px;
+
+        /* Visualizer Box */
+        .viz-container {
+            background: #0F172A;
+            border-radius: 12px;
             width: 100%;
-            height: auto;
-            background: radial-gradient(circle at 30% 40%, #1a2040, #0a0e27);
+            aspect-ratio: 16/9;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
-        
-        /* Slider */
-        .slider-container {
-            margin: 20px 0;
-        }
-        
-        .slider-container label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: var(--border-medium);
-            border-radius: 3px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        
-        /* Stats Row - Side by Side */
-        .stats-row {
-            display: flex;
-            gap: 16px;
-            margin-top: 16px;
-        }
-        
-        .stat-card {
-            flex: 1;
-            text-align: center;
-            padding: 16px 12px;
-            background-color: var(--bg-surface);
-            border-radius: 16px;
-            border: 1px solid var(--border-light);
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            font-family: monospace;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-        
-        .stat-unit {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        
-        /* Color Cards Grid */
-        .color-grid {
+
+        canvas { width: 100%; height: 100%; }
+
+        /* Parts Grid */
+        .parts-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin: 20px 0;
         }
-        
-        .color-card {
-            background-color: var(--bg-surface);
-            border-radius: 16px;
-            padding: 14px 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+
+        @media (min-width: 600px) {
+            .parts-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .part-card {
+            background: var(--bg-page);
+            padding: 12px;
+            border-radius: 12px;
             text-align: center;
+            cursor: pointer;
             border: 2px solid transparent;
+            transition: 0.2s;
         }
-        
-        .color-card.active {
-            border-color: var(--accent-blue);
-            background-color: var(--accent-blue-light);
+
+        .part-card.active {
+            border-color: var(--primary);
+            background: var(--bg-card);
             transform: scale(1.02);
         }
-        
-        .color-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+        /* Formula Grid */
+        .formula-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
-        
-        .color-swatch {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin: 0 auto 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+        .formula-card {
+            background: var(--bg-page);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
         }
-        
-        .color-name {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .color-description {
-            font-size: 10px;
+
+        .formula-label {
             color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
         }
-        
-        .swatch-center { background-color: #EF4444; }
-        .swatch-radius { background-color: #3B82F6; }
-        .swatch-diameter { background-color: #10B981; }
-        .swatch-circumference { background-color: #F59E0B; }
-        .swatch-arc { background-color: #8B5CF6; }
-        
-        /* Help Box */
-        .help-box {
-            background-color: var(--accent-blue-light);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 24px 0;
-            border-left: 4px solid var(--accent-blue);
-        }
-        
-        .help-box h4 {
-            margin-bottom: 12px;
-            color: var(--accent-blue);
-            font-size: 16px;
-        }
-        
-        .help-box p {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-        
-        .formula-highlight {
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            margin: 16px 0;
-            color: var(--accent-blue);
-            font-family: monospace;
-        }
-        
-        .next-section {
-            text-align: center;
+
+        /* Navigation Footer */
+        .nav-footer {
+            display: flex;
+            justify-content: space-between;
             margin: 40px 0 20px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-light);
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        
-        .next-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--accent-blue);
-            color: white;
-            padding: 14px 32px;
+
+        .btn {
+            padding: 12px 24px;
             border-radius: 40px;
             text-decoration: none;
             font-weight: 600;
-            transition: var(--transition);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .next-btn:hover {
-            background-color: var(--accent-blue-hover);
+
+        .btn-solid {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-solid:hover {
+            background: #2563EB;
             transform: translateY(-2px);
         }
-        
-        .footer {
-            padding: 40px 0 30px;
-            text-align: center;
-            border-top: 1px solid var(--border-light);
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-top: 20px;
+
+        .btn-outline {
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
         }
-        
-        .info-note {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 16px;
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
-        
-        hr { border-color: var(--border-light); margin: 16px 0; }
-        
-        @media (max-width: 768px) {
-            .container { padding: 0 16px; }
-            h1 { font-size: 28px; }
-            .card { padding: 20px; }
-            .stats-row { flex-direction: column; gap: 10px; }
-            .stat-value { font-size: 22px; }
-            .color-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .navbar .container { flex-direction: column; text-align: center; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .formula-grid { grid-template-columns: 1fr; }
+            .nav-footer { flex-direction: column; }
+            .nav-footer a { text-align: center; justify-content: center; }
         }
-        
-        @media (max-width: 480px) {
-            .color-grid { grid-template-columns: 1fr; }
-        }
-        
-        @keyframes flashBorder {
-            0% { border-color: transparent; box-shadow: 0 0 0 transparent; }
-            50% { border-color: var(--accent-blue); box-shadow: 0 0 16px var(--accent-blue); }
-            100% { border-color: transparent; box-shadow: 0 0 0 transparent; }
-        }
-        
-        .circle-flash {
-            animation: flashBorder 0.4s ease-in-out 3;
-        }
-        
-        .separator {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--border-medium), transparent);
-            margin: 16px 0;
-        }
+
+        .katex { font-size: 1.1em; }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <div class="container">
-        <a href="../../../index.html" class="logo">
-            <span class="logo-bn">গনিতি</span>
-            <span class="logo-en">Goniti</span>
-        </a>
-        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-            <a href="../../../index.html" class="back-link"><i class="fas fa-arrow-left"></i> সব অধ্যায়</a>
-            <div class="theme-toggle">
-                <button class="theme-btn active" data-theme="light"><i class="fas fa-sun"></i> লাইট</button>
-                <button class="theme-btn" data-theme="dark"><i class="fas fa-moon"></i> ডার্ক</button>
-                <button class="theme-btn" data-theme="system"><i class="fas fa-desktop"></i> সিস্টেম</button>
+<div class="container">
+    <nav class="nav">
+        <a href="../../../index.html" class="logo">গনিতি .</a>
+        <div class="theme-toggle" id="themeSwitcher">
+            <button class="t-btn active" data-mode="light">লাইট</button>
+            <button class="t-btn" data-mode="dark">ডার্ক</button>
+        </div>
+    </nav>
+
+    <header style="margin-bottom: 30px;">
+        <span style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;">১ম পত্র | অধ্যায় ০৪</span>
+        <h1 style="margin: 10px 0;">বৃত্তের পরিচয় (Circle Anatomy)</h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">একটি নির্দিষ্ট বিন্দুকে কেন্দ্র করে সমান দূরত্ব বজায় রেখে যে বক্ররেখা ঘোরে, তাকেই বৃত্ত বলে।</p>
+    </header>
+
+    <!-- Interactive Circle Visualizer -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-chart-line" style="color: var(--primary);"></i>
+            ইন্টারেক্টিভ বৃত্ত
+        </div>
+        <div class="viz-container">
+            <canvas id="circleCanvas"></canvas>
+        </div>
+
+        <div class="parts-grid" id="partsList">
+            <div class="part-card active" data-type="center">
+                <div><span class="dot" style="background: var(--danger);"></span> কেন্দ্র</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Center</div>
+            </div>
+            <div class="part-card" data-type="radius">
+                <div><span class="dot" style="background: var(--primary);"></span> ব্যাসার্ধ</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Radius ($r$)</div>
+            </div>
+            <div class="part-card" data-type="diameter">
+                <div><span class="dot" style="background: var(--secondary);"></span> ব্যাস</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Diameter ($2r$)</div>
+            </div>
+            <div class="part-card" data-type="circum">
+                <div><span class="dot" style="background: var(--accent);"></span> পরিধি</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Circumference</div>
             </div>
         </div>
     </div>
-</nav>
 
-<main>
-    <div class="container">
-        <!-- Hero Section -->
-        <div class="hero">
-            <span class="chapter-badge"><i class="fas fa-circle"></i> ১ম পত্র | অধ্যায় ০৪: বৃত্ত</span>
-            <h1>বৃত্ত কী?</h1>
-            <p class="hero-description">
-                একটি বৃত্ত হলো কেন্দ্র নামক একটি নির্দিষ্ট বিন্দু থেকে সমান দূরত্বে অবস্থিত সকল বিন্দুর সমষ্টি। 
-                এই নির্দিষ্ট দূরত্বটিকে বলা হয় <strong>ব্যাসার্ধ (Radius)</strong>।
-            </p>
+    <!-- Basic Formulas -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-calculator" style="color: var(--secondary);"></i>
+            প্রাথমিক সূত্রাবলী
         </div>
-
-        <!-- ========== CIRCLE 1: INTERACTIVE ========== -->
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-chart-line" style="color: var(--accent-blue);"></i>
-                ইন্টারেক্টিভ বৃত্ত
+        <div class="formula-grid">
+            <div class="formula-card">
+                <div class="formula-label">পরিধি (Circumference)</div>
+                <div style="font-size: 1.2rem;">$$C = 2\pi r$$</div>
             </div>
-            
-            <div class="canvas-container" id="interactiveCanvasContainer">
-                <canvas id="interactiveCanvas" width="500" height="400" style="width:100%; height:auto; aspect-ratio:500/400; display:block;"></canvas>
+            <div class="formula-card">
+                <div class="formula-label">ক্ষেত্রফল (Area)</div>
+                <div style="font-size: 1.2rem;">$$A = \pi r^2$$</div>
             </div>
-            
-            <!-- Radius Slider -->
-            <div class="slider-container">
-                <label>
-                    <span><i class="fas fa-expand-alt"></i> ব্যাসার্ধ (Radius)</span>
-                    <span id="radiusValueDisplay">2.50</span>
-                </label>
-                <input type="range" id="radiusSlider" min="0.5" max="5" step="0.05" value="2.5">
-            </div>
-            
-            <!-- Stats Side by Side -->
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-value" id="radiusStatDisplay">2.50</div>
-                    <div class="stat-label">ব্যাসার্ধ (r)</div>
-                    <div class="stat-unit">একক</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="circumferenceDisplay">15.71</div>
-                    <div class="stat-label">পরিধি (2πr)</div>
-                    <div class="stat-unit">একক</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="areaDisplay">19.63</div>
-                    <div class="stat-label">ক্ষেত্রফল (πr²)</div>
-                    <div class="stat-unit">বর্গ একক</div>
-                </div>
-            </div>
-            
-            <div class="info-note">
-                <i class="fas fa-hand-pointer"></i> স্লাইডার সরান — ব্যাসার্ধ বাড়লে/কমলে বৃত্ত ও মান বদলায়
-            </div>
-        </div>
-
-        <!-- Separator -->
-        <div class="separator"></div>
-
-        <!-- ========== CIRCLE 2: COLOR RECOGNITION ========== -->
-        <div class="card">
-            <div class="card-title">
-                <i class="fas fa-palette" style="color: var(--accent-green);"></i>
-                রঙিন বৃত্তের উপাদান চেনার অনুশীলন
-            </div>
-            <p style="font-size: 14px; margin-bottom: 16px;">
-                নিচের রঙিন কার্ডগুলিতে ক্লিক করুন — বৃত্তের ওপর সেই অংশটি হাইলাইট হবে।
-            </p>
-            
-            <div class="canvas-container" id="colorCanvasContainer">
-                <canvas id="colorCanvas" width="500" height="400" style="width:100%; height:auto; aspect-ratio:500/400; display:block;"></canvas>
-            </div>
-            
-            <div class="color-grid">
-                <div class="color-card" data-part="center">
-                    <div class="color-swatch swatch-center"></div>
-                    <div class="color-name">কেন্দ্র</div>
-                    <div class="color-description">বৃত্তের মাঝখানের লাল বিন্দু</div>
-                </div>
-                <div class="color-card" data-part="radius">
-                    <div class="color-swatch swatch-radius"></div>
-                    <div class="color-name">ব্যাসার্ধ</div>
-                    <div class="color-description">কেন্দ্র থেকে পরিধি পর্যন্ত নীল রেখা</div>
-                </div>
-                <div class="color-card" data-part="diameter">
-                    <div class="color-swatch swatch-diameter"></div>
-                    <div class="color-name">ব্যাস</div>
-                    <div class="color-description">পরিধির এক প্রান্ত থেকে অপর প্রান্ত (সবুজ)</div>
-                </div>
-                <div class="color-card" data-part="circumference">
-                    <div class="color-swatch swatch-circumference"></div>
-                    <div class="color-name">পরিধি</div>
-                    <div class="color-description">বৃত্তের চারপাশের কমলা সীমানা</div>
-                </div>
-                <div class="color-card" data-part="arc">
-                    <div class="color-swatch swatch-arc"></div>
-                    <div class="color-name">চাপ</div>
-                    <div class="color-description">পরিধির বেগুনি অংশ (৯০°)</div>
-                </div>
-            </div>
-            
-            <div class="formula-highlight">
-                π (পাই) ≈ 3.14159
-            </div>
-            <p style="font-size: 13px; text-align: center; color: var(--text-muted);">
-                প্রতিটি বৃত্তের পরিধি ও ব্যাসের অনুপাত π (ধ্রুবক)
-            </p>
-        </div>
-        
-        <!-- Explanation / Summary -->
-        <div class="help-box">
-            <h4><i class="fas fa-lightbulb"></i> সারকথা</h4>
-            <p><strong>বৃত্ত হলো একটি নির্দিষ্ট বিন্দু (কেন্দ্র) থেকে সমান দূরত্বে অবস্থিত সকল বিন্দুর সেট।</strong></p>
-            <p>এই সমান দূরত্বটিকে বলা হয় <strong>ব্যাসার্ধ (r)</strong>। ব্যাসার্ধ বাড়লে বৃত্ত বড় হয়, কমলে ছোট হয়।</p>
-            <p style="margin-top: 10px;">📐 <strong>মনে রাখবেন:</strong><br>
-            ব্যাস = ২ × ব্যাসার্ধ (d = 2r)<br>
-            পরিধি = ২πr (Circumference = 2πr)<br>
-            ক্ষেত্রফল = πr² (Area = πr²)</p>
-        </div>
-        
-        <!-- Next Button -->
-        <div class="next-section">
-            <a href="02-center-origin.html" class="next-btn">
-                <span>পরবর্তী: কেন্দ্র মূলবিন্দুতে (x² + y² = r²)</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
         </div>
     </div>
-</main>
 
-<footer class="footer">
-    <div class="container">
-        <p>গনিতি (Goniti) — দৃশ্যমান উচ্চতর গণিত | Visual Higher Mathematics for HSC Bangladesh</p>
-    </div>
-</footer>
+    <!-- Navigation Footer -->
+    <footer class="nav-footer">
+        <a href="../../../index.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> সব অধ্যায়</a>
+        <a href="02-center-origin.html" class="btn btn-solid">পরবর্তী: কেন্দ্র মূলবিন্দুতে <i class="fas fa-arrow-right"></i></a>
+    </footer>
+</div>
 
 <script>
     // ========== THEME MANAGEMENT ==========
-    function initTheme() {
-        const savedTheme = localStorage.getItem('goniti-theme') || 'light';
-        setTheme(savedTheme);
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            const themeValue = btn.getAttribute('data-theme');
-            if (themeValue === savedTheme) btn.classList.add('active');
-            else btn.classList.remove('active');
+    const ThemeApp = (() => {
+        const switcher = document.getElementById('themeSwitcher');
+        const btns = switcher.querySelectorAll('.t-btn');
+
+        function set(mode) {
+            document.documentElement.setAttribute('data-theme', mode);
+            localStorage.setItem('math-theme', mode);
+            btns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+        }
+
+        switcher.addEventListener('click', (e) => {
+            if(e.target.dataset.mode) set(e.target.dataset.mode);
         });
-    }
-    
-    function setTheme(theme) {
-        if (theme === 'system') {
-            document.documentElement.removeAttribute('data-theme');
-        } else {
-            document.documentElement.setAttribute('data-theme', theme);
+
+        return {
+            init: () => {
+                const saved = localStorage.getItem('math-theme') || 'light';
+                set(saved);
+            }
+        };
+    })();
+
+    // ========== CANVISUALIZER ==========
+    const CanvasApp = (() => {
+        const canvas = document.getElementById('circleCanvas');
+        const ctx = canvas.getContext('2d');
+        const cards = document.querySelectorAll('.part-card');
+        let mode = 'center';
+
+        function draw() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const r = Math.min(cx, cy) * 0.7;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Ghost Circle (dashed)
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.shadowBlur = 12;
+
+            if(mode === 'center') {
+                ctx.beginPath();
+                ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+                ctx.fillStyle = '#EF4444';
+                ctx.shadowColor = '#EF4444';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            } 
+            else if(mode === 'radius') {
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + r, cy);
+                ctx.strokeStyle = '#3B82F6';
+                ctx.shadowColor = '#3B82F6';
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#EF4444';
+                ctx.fill();
+            } 
+            else if(mode === 'diameter') {
+                ctx.beginPath();
+                ctx.moveTo(cx - r, cy);
+                ctx.lineTo(cx + r, cy);
+                ctx.strokeStyle = '#10B981';
+                ctx.shadowColor = '#10B981';
+                ctx.stroke();
+            } 
+            else if(mode === 'circum') {
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.strokeStyle = '#F59E0B';
+                ctx.shadowColor = '#F59E0B';
+                ctx.stroke();
+            }
+            
+            ctx.shadowBlur = 0;
         }
-        localStorage.setItem('goniti-theme', theme);
-        drawInteractiveCircle();
-        drawColorCircle();
-    }
-    
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const theme = btn.getAttribute('data-theme');
-            setTheme(theme);
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            drawInteractiveCircle();
-            drawColorCircle();
-        });
-    });
-    
-    // ========== SHARED CONSTANTS ==========
-    const CENTER_X = 250;
-    const CENTER_Y = 200;
-    const PX_PER_UNIT = 35;
-    
-    // ========== CIRCLE 1: INTERACTIVE ==========
-    const interactiveCanvas = document.getElementById('interactiveCanvas');
-    let interactiveCtx = interactiveCanvas?.getContext('2d');
-    interactiveCanvas.width = 500;
-    interactiveCanvas.height = 400;
-    
-    let currentRadius = 2.5;
-    
-    function updateInteractiveStats() {
-        const circumference = (2 * Math.PI * currentRadius).toFixed(2);
-        const area = (Math.PI * currentRadius * currentRadius).toFixed(2);
-        document.getElementById('circumferenceDisplay').innerHTML = circumference;
-        document.getElementById('areaDisplay').innerHTML = area;
-        document.getElementById('radiusStatDisplay').innerHTML = currentRadius.toFixed(2);
-        document.getElementById('radiusValueDisplay').innerHTML = currentRadius.toFixed(2);
-    }
-    
-    function drawInteractiveCircle() {
-        if (!interactiveCtx) return;
-        
-        const w = interactiveCanvas.width;
-        const h = interactiveCanvas.height;
-        const radiusPx = currentRadius * PX_PER_UNIT;
-        
-        interactiveCtx.clearRect(0, 0, w, h);
-        
-        // Grid
-        interactiveCtx.strokeStyle = 'rgba(128, 128, 128, 0.15)';
-        interactiveCtx.lineWidth = 0.5;
-        for (let x = 0; x <= w; x += PX_PER_UNIT) {
-            interactiveCtx.beginPath();
-            interactiveCtx.moveTo(x, 0);
-            interactiveCtx.lineTo(x, h);
-            interactiveCtx.stroke();
-        }
-        for (let y = 0; y <= h; y += PX_PER_UNIT) {
-            interactiveCtx.beginPath();
-            interactiveCtx.moveTo(0, y);
-            interactiveCtx.lineTo(w, y);
-            interactiveCtx.stroke();
-        }
-        
-        // Axes
-        interactiveCtx.beginPath();
-        interactiveCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        interactiveCtx.lineWidth = 1.5;
-        interactiveCtx.moveTo(0, CENTER_Y);
-        interactiveCtx.lineTo(w, CENTER_Y);
-        interactiveCtx.stroke();
-        interactiveCtx.moveTo(CENTER_X, 0);
-        interactiveCtx.lineTo(CENTER_X, h);
-        interactiveCtx.stroke();
-        
-        // Circle
-        interactiveCtx.beginPath();
-        interactiveCtx.arc(CENTER_X, CENTER_Y, radiusPx, 0, 2 * Math.PI);
-        interactiveCtx.strokeStyle = '#3B82F6';
-        interactiveCtx.lineWidth = 3;
-        interactiveCtx.stroke();
-        
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        interactiveCtx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.12)' : 'rgba(59, 130, 246, 0.08)';
-        interactiveCtx.fill();
-        
-        // Center point
-        interactiveCtx.beginPath();
-        interactiveCtx.arc(CENTER_X, CENTER_Y, 6, 0, 2 * Math.PI);
-        interactiveCtx.fillStyle = '#EF4444';
-        interactiveCtx.fill();
-        interactiveCtx.beginPath();
-        interactiveCtx.arc(CENTER_X, CENTER_Y, 2.5, 0, 2 * Math.PI);
-        interactiveCtx.fillStyle = '#FFFFFF';
-        interactiveCtx.fill();
-        
-        // Radius line
-        interactiveCtx.beginPath();
-        interactiveCtx.moveTo(CENTER_X, CENTER_Y);
-        interactiveCtx.lineTo(CENTER_X + radiusPx, CENTER_Y);
-        interactiveCtx.strokeStyle = '#3B82F6';
-        interactiveCtx.lineWidth = 2.5;
-        interactiveCtx.setLineDash([8, 6]);
-        interactiveCtx.stroke();
-        interactiveCtx.setLineDash([]);
-        
-        // Radius label
-        interactiveCtx.font = '12px monospace';
-        interactiveCtx.fillStyle = '#3B82F6';
-        interactiveCtx.fillText(`r = ${currentRadius.toFixed(2)}`, CENTER_X + radiusPx/2 - 15, CENTER_Y - 8);
-        
-        // Axis labels
-        interactiveCtx.fillStyle = 'var(--text-muted)';
-        interactiveCtx.font = '11px Inter';
-        interactiveCtx.fillText('O (কেন্দ্র)', CENTER_X - 35, CENTER_Y + 4);
-        interactiveCtx.fillText('x', w - 10, CENTER_Y - 5);
-        interactiveCtx.fillText('y', CENTER_X + 5, 12);
-        
-        updateInteractiveStats();
-    }
-    
-    // Radius slider
-    const radiusSlider = document.getElementById('radiusSlider');
-    radiusSlider?.addEventListener('input', (e) => {
-        currentRadius = parseFloat(e.target.value);
-        drawInteractiveCircle();
-    });
-    
-    // ========== CIRCLE 2: COLOR RECOGNITION ==========
-    const colorCanvas = document.getElementById('colorCanvas');
-    let colorCtx = colorCanvas?.getContext('2d');
-    colorCanvas.width = 500;
-    colorCanvas.height = 400;
-    
-    let colorCircleRadius = 2.5;
-    let activeHighlight = null;
-    let flashTimer = null;
-    
-    function drawColorCircle() {
-        if (!colorCtx) return;
-        
-        const w = colorCanvas.width;
-        const h = colorCanvas.height;
-        const radiusPx = colorCircleRadius * PX_PER_UNIT;
-        
-        colorCtx.clearRect(0, 0, w, h);
-        
-        // Grid
-        colorCtx.strokeStyle = 'rgba(128, 128, 128, 0.15)';
-        colorCtx.lineWidth = 0.5;
-        for (let x = 0; x <= w; x += PX_PER_UNIT) {
-            colorCtx.beginPath();
-            colorCtx.moveTo(x, 0);
-            colorCtx.lineTo(x, h);
-            colorCtx.stroke();
-        }
-        for (let y = 0; y <= h; y += PX_PER_UNIT) {
-            colorCtx.beginPath();
-            colorCtx.moveTo(0, y);
-            colorCtx.lineTo(w, y);
-            colorCtx.stroke();
-        }
-        
-        // Axes
-        colorCtx.beginPath();
-        colorCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        colorCtx.lineWidth = 1.5;
-        colorCtx.moveTo(0, CENTER_Y);
-        colorCtx.lineTo(w, CENTER_Y);
-        colorCtx.stroke();
-        colorCtx.moveTo(CENTER_X, 0);
-        colorCtx.lineTo(CENTER_X, h);
-        colorCtx.stroke();
-        
-        // Circle
-        colorCtx.beginPath();
-        colorCtx.arc(CENTER_X, CENTER_Y, radiusPx, 0, 2 * Math.PI);
-        
-        if (activeHighlight === 'circumference') {
-            colorCtx.strokeStyle = '#F59E0B';
-            colorCtx.lineWidth = 5;
-        } else if (activeHighlight === 'arc') {
-            colorCtx.strokeStyle = '#8B5CF6';
-            colorCtx.lineWidth = 5;
-        } else {
-            colorCtx.strokeStyle = '#3B82F6';
-            colorCtx.lineWidth = 3;
-        }
-        colorCtx.stroke();
-        
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        colorCtx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.12)' : 'rgba(59, 130, 246, 0.08)';
-        colorCtx.fill();
-        
-        // Center point
-        colorCtx.beginPath();
-        colorCtx.arc(CENTER_X, CENTER_Y, 6, 0, 2 * Math.PI);
-        colorCtx.fillStyle = '#EF4444';
-        colorCtx.fill();
-        colorCtx.beginPath();
-        colorCtx.arc(CENTER_X, CENTER_Y, 2.5, 0, 2 * Math.PI);
-        colorCtx.fillStyle = '#FFFFFF';
-        colorCtx.fill();
-        
-        if (activeHighlight === 'center') {
-            colorCtx.beginPath();
-            colorCtx.arc(CENTER_X, CENTER_Y, 14, 0, 2 * Math.PI);
-            colorCtx.strokeStyle = '#EF4444';
-            colorCtx.lineWidth = 3;
-            colorCtx.stroke();
-        }
-        
-        // Radius line
-        colorCtx.beginPath();
-        colorCtx.moveTo(CENTER_X, CENTER_Y);
-        colorCtx.lineTo(CENTER_X + radiusPx, CENTER_Y);
-        
-        if (activeHighlight === 'radius') {
-            colorCtx.strokeStyle = '#3B82F6';
-            colorCtx.lineWidth = 5;
-            colorCtx.setLineDash([]);
-        } else {
-            colorCtx.strokeStyle = '#3B82F6';
-            colorCtx.lineWidth = 2.5;
-            colorCtx.setLineDash([8, 6]);
-        }
-        colorCtx.stroke();
-        colorCtx.setLineDash([]);
-        
-        // Diameter
-        if (activeHighlight === 'diameter') {
-            colorCtx.beginPath();
-            colorCtx.moveTo(CENTER_X - radiusPx, CENTER_Y);
-            colorCtx.lineTo(CENTER_X + radiusPx, CENTER_Y);
-            colorCtx.strokeStyle = '#10B981';
-            colorCtx.lineWidth = 4;
-            colorCtx.stroke();
-        }
-        
-        // Arc
-        if (activeHighlight === 'arc') {
-            colorCtx.beginPath();
-            colorCtx.arc(CENTER_X, CENTER_Y, radiusPx, 0, Math.PI / 2);
-            colorCtx.strokeStyle = '#8B5CF6';
-            colorCtx.lineWidth = 6;
-            colorCtx.stroke();
-        }
-        
-        // Radius label
-        colorCtx.font = '12px monospace';
-        colorCtx.fillStyle = '#3B82F6';
-        colorCtx.fillText(`r = ${colorCircleRadius.toFixed(2)}`, CENTER_X + radiusPx/2 - 15, CENTER_Y - 8);
-        
-        // Labels
-        colorCtx.fillStyle = 'var(--text-muted)';
-        colorCtx.font = '11px Inter';
-        colorCtx.fillText('O (কেন্দ্র)', CENTER_X - 35, CENTER_Y + 4);
-        colorCtx.fillText('x', w - 10, CENTER_Y - 5);
-        colorCtx.fillText('y', CENTER_X + 5, 12);
-    }
-    
-    function highlightPart(part) {
-        if (flashTimer) clearTimeout(flashTimer);
-        
-        document.querySelectorAll('.color-card').forEach(card => {
-            card.classList.remove('active');
-        });
-        
-        const activeCard = document.querySelector(`.color-card[data-part="${part}"]`);
-        if (activeCard) activeCard.classList.add('active');
-        
-        activeHighlight = part;
-        drawColorCircle();
-        
-        // Flash the canvas container
-        const container = document.getElementById('colorCanvasContainer');
-        if (container) {
-            container.classList.add('circle-flash');
-            setTimeout(() => container.classList.remove('circle-flash'), 900);
-        }
-        
-        flashTimer = setTimeout(() => {
-            activeHighlight = null;
-            drawColorCircle();
-            document.querySelectorAll('.color-card').forEach(card => {
-                card.classList.remove('active');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                cards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                mode = card.dataset.type;
+                draw();
             });
-        }, 2500);
-    }
-    
-    document.querySelectorAll('.color-card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const part = card.getAttribute('data-part');
-            if (part) highlightPart(part);
         });
+
+        window.addEventListener('resize', draw);
+        return { init: draw };
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        CanvasApp.init();
+        ThemeApp.init();
     });
-    
-    // Initial draws
-    drawInteractiveCircle();
-    drawColorCircle();
-    initTheme();
 </script>
 </body>
 </html>
