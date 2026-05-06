@@ -1,1066 +1,225 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-        }
-    }
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ম্যাট্রিক্স পরিচয় | Matrix Introduction | Goniti</title>
+
+    <!-- Pillar 2.1: KaTeX Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@700&family=Fira+Code&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Shared CSS -->
-    <link rel="stylesheet" href="../../../assets/css/common.css">
-    
+
     <style>
-        /* Page-specific styles */
-        
-        /* Mode Tabs */
-        .mode-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            border-bottom: 2px solid var(--border-light);
-            padding-bottom: 12px;
+        /* Pillar 1.1: Design Tokens & Theme Management */
+        :root {
+            --bg-main: #ffffff;
+            --bg-card: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent: #3b82f6;
+            --border: #e2e8f0;
+            --glass: rgba(255, 255, 255, 0.8);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
-        
-        .mode-tab {
-            background: none;
-            border: none;
-            padding: 12px 28px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            color: var(--text-secondary);
-            border-radius: 40px;
-            transition: var(--transition);
+
+        [data-theme="dark"] {
+            --bg-main: #05070a;
+            --bg-card: #0f172a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #60a5fa;
+            --border: #1e293b;
+            --glass: rgba(15, 23, 42, 0.8);
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5);
         }
-        
-        .mode-tab i {
-            margin-right: 8px;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
+        body { background: var(--bg-main); color: var(--text-primary); font-family: 'Inter', sans-serif; line-height: 1.6; }
+
+        /* Pillar 1.2: Navigation Component */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
         }
+
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent); text-decoration: none; }
+        .theme-toggle { display: flex; gap: 10px; background: var(--border); padding: 4px; border-radius: 50px; }
+        .theme-btn { border: none; background: none; padding: 6px 12px; cursor: pointer; border-radius: 50px; color: var(--text-secondary); }
+        .theme-btn.active { background: var(--bg-main); color: var(--accent); box-shadow: var(--shadow); }
+
+        /* Layout Architecture */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
         
-        .mode-tab.active {
-            background-color: var(--accent-blue);
-            color: white;
-            box-shadow: var(--shadow-md);
+        .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 30px; }
+        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+
+        /* Visualizer Box */
+        .visualizer-frame {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 24px; overflow: hidden; position: relative; box-shadow: var(--shadow);
         }
+        #viewport { height: 500px; width: 100%; cursor: grab; }
+
+        /* Data & Explanation Boxes */
+        .side-panel { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; border-radius: 20px; }
         
-        .mode-tab:hover:not(.active) {
-            background-color: var(--bg-surface);
-            color: var(--text-primary);
+        .matrix-box { font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; margin-top: 15px; min-height: 180px; display: flex; align-items: center; justify-content: center; }
+        [data-theme="dark"] .matrix-box { background: rgba(255,255,255,0.05); }
+
+        /* Next Page CTA */
+        .cta-footer { margin-top: 50px; text-align: center; padding: 40px; border-top: 1px solid var(--border); }
+        .btn-next {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: var(--accent); color: white; padding: 16px 32px;
+            border-radius: 50px; text-decoration: none; font-weight: 600;
+            transition: transform 0.2s;
         }
-        
-        /* Mode Content */
-        .mode-content {
-            display: none;
-        }
-        
-        .mode-content.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Canvas Container */
-        .canvas-container {
-            background: linear-gradient(135deg, #0a0e27 0%, #141a3a 100%);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-lg);
-        }
-        
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 16px;
-            cursor: pointer;
-            width: 100%;
-            height: auto;
-            background: radial-gradient(circle at 30% 40%, #1a2040, #0a0e27);
-        }
-        
-        /* Two Column Layout */
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        
-        .two-columns-camera {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        
-        /* Matrix Display Box */
-        .matrix-box {
-            background-color: var(--bg-surface);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid var(--border-light);
-        }
-        
-        .matrix-title {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-        }
-        
-        .matrix-grid {
-            display: inline-block;
-            font-family: 'Courier New', monospace;
-            font-size: 20px;
-            font-weight: 600;
-            background-color: var(--bg-card);
-            padding: 16px 24px;
-            border-radius: 16px;
-            border: 1px solid var(--border-medium);
-        }
-        
-        .matrix-grid .row {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-        
-        .matrix-grid .cell {
-            min-width: 60px;
-            text-align: center;
-            padding: 4px 0;
-        }
-        
-        .matrix-grid .cell input {
-            width: 70px;
-            padding: 8px;
-            text-align: center;
-            font-family: monospace;
-            font-size: 16px;
-            font-weight: 600;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-medium);
-            border-radius: 8px;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-        
-        .matrix-grid .cell input:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 2px var(--accent-blue-light);
-        }
-        
-        /* Controls Grid */
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin: 20px 0;
-        }
-        
-        .ctrl-btn {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: 40px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            color: var(--text-primary);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .ctrl-btn:hover {
-            background-color: var(--accent-blue-light);
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
-        }
-        
-        .ctrl-btn.primary {
-            background-color: var(--accent-blue);
-            color: white;
-            border-color: var(--accent-blue);
-        }
-        
-        .ctrl-btn.primary:hover {
-            background-color: var(--accent-blue-hover);
-        }
-        
-        .ctrl-btn.danger {
-            background-color: var(--accent-red);
-            color: white;
-            border-color: var(--accent-red);
-        }
-        
-        /* Preset Buttons - Hidden */
-        .presets {
-            display: none;
-        }
-        
-        .preset-btn {
-            display: none;
-        }
-        
-        /* Explanation Box */
-        .explanation-box {
-            background-color: var(--accent-blue-light);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 24px;
-            border-left: 4px solid var(--accent-blue);
-        }
-        
-        .explanation-box h4 {
-            margin-bottom: 12px;
-            color: var(--accent-blue);
-        }
-        
-        /* Slider */
-        .slider-container {
-            margin: 16px 0;
-        }
-        
-        .slider-container label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: var(--border-medium);
-            border-radius: 3px;
-            outline: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--accent-blue);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-        
-        /* Live values row */
-        .live-values {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            margin: 16px 0;
-            padding: 12px;
-            background-color: var(--bg-surface);
-            border-radius: 16px;
-            flex-wrap: wrap;
-        }
-        
-        .live-value {
-            font-family: monospace;
-            font-size: 14px;
-        }
-        
-        .live-value span {
-            font-weight: 700;
-            color: var(--accent-blue);
-        }
-        
-        hr {
-            border-color: var(--border-light);
-            margin: 20px 0;
-        }
-        
-        @media (max-width: 768px) {
-            .char-canvas-matrix-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .two-columns-camera {
-                grid-template-columns: 1fr;
-            }
-            
-            .controls-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .char-controls-compact {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .matrix-grid .cell input {
-                width: 55px;
-                font-size: 14px;
-            }
-            
-            .mode-tab {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
-        }
-        
-        .value-highlight {
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-            margin: 16px 0;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            background-color: var(--accent-blue-light);
-            color: var(--accent-blue);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 12px;
-        }
-        
-        /* Character mode layout */
-        .char-canvas-matrix-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        
-        .char-controls-compact {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 16px 0;
-        }
-        
-        /* Camera position inputs - hidden */
-        .camera-position-box {
-            display: none;
-        }
-        
-        /* Quick controls - hidden */
-        .quick-controls-box {
-            display: none;
-        }
-        
-        /* Camera reset button positioned */
-        .camera-reset-top-right {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-        
-        .canvas-container-camera {
-            position: relative;
-        }
+        .btn-next:hover { transform: translateX(5px); opacity: 0.9; }
+
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-<nav class="navbar">
-    <div class="container">
-        <a href="../../../index.html" class="logo">
-            <span class="logo-bn">গনিতি</span>
-            <span class="logo-en">Goniti</span>
-        </a>
-        <div style="display: flex; gap: 20px; align-items: center;">
-            <a href="../../../index.html" class="back-link"><i class="fas fa-arrow-left"></i> সব অধ্যায়</a>
-            <div class="theme-toggle">
-                <button class="theme-btn active" data-theme="light"><i class="fas fa-sun"></i></button>
-                <button class="theme-btn" data-theme="dark"><i class="fas fa-moon"></i></button>
-                <button class="theme-btn" data-theme="system"><i class="fas fa-desktop"></i></button>
-            </div>
+    <nav class="navbar">
+        <a href="index.html" class="logo">গনিতি <span style="font-weight: 300;">Goniti</span></a>
+        <div class="theme-toggle">
+            <button class="theme-btn active" onclick="setTheme('light')"><i class="fas fa-sun"></i></button>
+            <button class="theme-btn" onclick="setTheme('dark')"><i class="fas fa-moon"></i></button>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<main>
-    <div class="container">
-        <!-- Hero -->
-        <div style="padding: 48px 0 24px 0;">
-            <span class="chapter-badge"><i class="fas fa-table"></i> ১ম পত্র | অধ্যায় ০১: ম্যাট্রিক্স</span>
-            <h1 style="font-family: 'Poppins', sans-serif; font-size: 48px; font-weight: 800; margin-bottom: 16px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; background-clip: text; color: transparent;">
-                ম্যাট্রিক্স কী?
-            </h1>
-            <p style="font-size: 18px; color: var(--text-secondary); max-width: 800px;">
-                ম্যাট্রিক্স শুধু সংখ্যার একটি ছক নয়। এটি ভিডিও গেম, এআই, রোবটিক্সের ভাষা। নিচের টুলটি ব্যবহার করে দেখুন।
-            </p>
-        </div>
+    <main class="container">
+        <header style="margin-bottom: 2rem;">
+            <h1 style="font-size: 2.5rem; font-family: 'Poppins';">ম্যাট্রিক্স পরিচয়</h1>
+            <p style="color: var(--text-secondary);">3D ক্যামেরা মুভমেন্টের মাধ্যমে ম্যাট্রিক্সের বাস্তব প্রয়োগ দেখুন।</p>
+        </header>
 
-        <!-- Mode Tabs -->
-        <div class="mode-tabs">
-    <button class="mode-tab active" data-mode="character">
-        <i class="fas fa-walking"></i> ক্যারেক্টার মোড
-    </button>
-    <button class="mode-tab" data-mode="camera">
-        <i class="fas fa-camera"></i> 3D ক্যামেরা মোড
-    </button>
-</div>
+        <div class="main-grid">
+            <!-- 3D Canvas Section -->
+            <section class="visualizer-frame">
+                <div id="viewport"></div>
+                <button onclick="resetCamera()" style="position: absolute; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 10px; border: none; background: var(--accent); color: white; cursor: pointer;">
+                    Reset View
+                </button>
+            </section>
 
-        <!-- ========== CHARACTER MODE ========== -->
-        <div id="character-mode" class="mode-content active">
-            <div class="two-columns">
-                <!-- Left: Canvas -->
-                <div>
-                    <div class="canvas-container">
-                        <canvas id="characterCanvas" width="500" height="400" style="width:100%; height:auto; max-width:500px; aspect-ratio:500/400"></canvas>
-                    </div>
+            <!-- Explanation & Data Section -->
+            <aside class="side-panel">
+                <div class="card">
+                    <h3 style="font-size: 0.9rem; letter-spacing: 1px; color: var(--accent);">VIEW MATRIX</h3>
+                    <div id="matrix-display" class="matrix-box"></div>
                 </div>
-                
-                <!-- Right: Controls and Info -->
-                <div>
-                    <div class="matrix-box">
-                        <div class="matrix-title">বর্তমান ট্রান্সফরমেশন ম্যাট্রিক্স</div>
-                        <div class="matrix-grid">
-                            <div class="row">
-                                <div class="cell"><input type="number" id="char-a" value="1" step="0.05" class="matrix-input"></div>
-                                <div class="cell"><input type="number" id="char-b" value="0" step="0.05" class="matrix-input"></div>
-                                <div class="cell"><input type="number" id="char-tx" value="0" step="1" class="matrix-input"></div>
-                            </div>
-                            <div class="row">
-                                <div class="cell"><input type="number" id="char-c" value="0" step="0.05" class="matrix-input"></div>
-                                <div class="cell"><input type="number" id="char-d" value="1" step="0.05" class="matrix-input"></div>
-                                <div class="cell"><input type="number" id="char-ty" value="0" step="1" class="matrix-input"></div>
-                            </div>
-                            <div class="row">
-                                <div class="cell">0</div>
-                                <div class="cell">0</div>
-                                <div class="cell">1</div>
-                            </div>
-                        </div>
-                        
-                        <div class="matrix-title" style="margin-top: 20px;">🎮 ক্যারেক্টার কন্ট্রোল</div>
-                        <div class="char-controls-compact">
-                            <button class="ctrl-btn" id="char-up"><i class="fas fa-arrow-up"></i></button>
-                            <button class="ctrl-btn" id="char-down"><i class="fas fa-arrow-down"></i></button>
-                            <button class="ctrl-btn" id="char-left"><i class="fas fa-arrow-left"></i></button>
-                            <button class="ctrl-btn" id="char-right"><i class="fas fa-arrow-right"></i></button>
-                            <button class="ctrl-btn" id="char-rotate-l"><i class="fas fa-undo-alt"></i></button>
-                            <button class="ctrl-btn" id="char-rotate-r"><i class="fas fa-redo-alt"></i></button>
-                            <button class="ctrl-btn" id="char-scale-up"><i class="fas fa-search-plus"></i></button>
-                            <button class="ctrl-btn" id="char-scale-down"><i class="fas fa-search-minus"></i></button>
-                            <button class="ctrl-btn primary" id="char-reset"><i class="fas fa-sync-alt"></i></button>
-                        </div>
-                    </div>
+
+                <div class="card">
+                    <h3>💡 এটি কীভাবে কাজ করে?</h3>
+                    <p style="font-size: 0.9rem; margin-top: 10px; color: var(--text-secondary);">
+                        ক্যামেরা যখন মহাকাশে ঘোরে, তখন কম্পিউটার একটি ৪×৪ ম্যাট্রিক্স ব্যবহার করে প্রতিটি পয়েন্টের অবস্থান পরিবর্তন করে। ডান পাশের ভ্যালুগুলো লক্ষ্য করুন কীভাবে আপনার মুভমেন্টের সাথে সাথে ম্যাট্রিক্স পরিবর্তিত হচ্ছে।
+                    </p>
                 </div>
-            </div>
-            
-            <div class="explanation-box">
-                <h4><i class="fas fa-lightbulb"></i> কী ঘটছে?</h4>
-                <p>ম্যাট্রিক্সের প্রথম কলাম (a, c) নির্ধারণ করে X-অক্ষ বরাবর ক্যারেক্টার কীভাবে পরিবর্তিত হয়। দ্বিতীয় কলাম (b, d) নির্ধারণ করে Y-অক্ষ বরাবর। <strong>tx</strong> এবং <strong>ty</strong> হলো অবস্থান (translation)।</p>
-                <p style="margin-top: 8px;">আপনি ম্যাট্রিক্সের মান পরিবর্তন করলে ক্যারেক্টার বদলাবে। আবার ক্যারেক্টার সরালে ম্যাট্রিক্স বদলাবে। <strong>দুই দিকেই কাজ করে!</strong></p>
-            </div>
+            </aside>
         </div>
 
-        <!-- ========== 3D CAMERA MODE ========== -->
-        <div id="camera-mode" class="mode-content">
-            <div class="two-columns-camera">
-                <!-- Left: 3D Canvas -->
-                <div>
-                    <div class="canvas-container canvas-container-camera" style="min-height: 400px; position: relative;">
-                        <div id="three-canvas-container" style="width: 100%; height: 100%; min-height: 400px;"></div>
-                        <button class="ctrl-btn primary camera-reset-top-right" id="cam-reset" style="padding: 8px 16px;"><i class="fas fa-sync-alt"></i></button>
-                    </div>
-                </div>
-                
-                <!-- Right: Matrix Display -->
-                <div>
-                    <div class="matrix-box">
-                        <div class="matrix-title">📐 ভিউ ম্যাট্রিক্স (4×4)</div>
-                        <div style="font-family: monospace; font-size: 12px; text-align: left; overflow-x: auto;">
-                            <div id="view-matrix-display" style="white-space: pre; line-height: 1.4;">
-                                [ 1.0    0.0    0.0    5.0 ]<br>
-                                [ 0.0    1.0    0.0    3.0 ]<br>
-                                [ 0.0    0.0    1.0    5.0 ]<br>
-                                [ 0.0    0.0    0.0    1.0 ]
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Hidden camera controls boxes -->
-            <div class="camera-position-box"></div>
-            <div class="quick-controls-box"></div>
-            
-            <div class="explanation-box">
-                <h4><i class="fas fa-lightbulb"></i> 3D ক্যামেরা মোড সম্পর্কে</h4>
-                <p><strong>নিয়ন্ত্রণ:</strong> মাউস দ্বারা ক্লিক-ড্র্যাগ করে ঘোরান, স্ক্রল করে জুম দিন, ডান-ক্লিক দ্বারা প্যান করুন। মোবাইলে দুই আঙুল দিয়ে ঘোরান।</p>
-                <p style="margin-top: 8px;"><strong>ভিউ ম্যাট্রিক্স:</strong> এটি ক্যামেরার দৃষ্টিভঙ্গি প্রতিনিধিত্ব করে। প্রথম তিন সারিতে অভিযোজন (right, up, forward vectors) এবং অবস্থান থাকে। চতুর্থ সারি সর্বদা [0 0 0 1]।</p>
-                <p style="margin-top: 8px;">ক্যামেরা ইনপুট পরিবর্তন করুন এবং দৃশ্য তাৎক্ষণিকভাবে আপডেট হয়। 3D স্থানে গণিতের শক্তি অনুভব করুন!</p>
-            </div>
-        </div>
-    </div>
-<!-- Chapter Navigation - Centered -->
-<div style="text-align: center; margin: 40px 0 20px; padding-top: 20px; border-top: 2px solid var(--border-light);">
-    <a href="02-types.html" style="display: inline-flex; align-items: center; gap: 10px; background-color: var(--accent-blue); color: white; padding: 12px 28px; border-radius: 40px; text-decoration: none; font-weight: 600; transition: var(--transition);">
-        <span>পরবর্তী অধ্যায়</span>
-        <i class="fas fa-arrow-right"></i>
-    </a>
-</div>
-</main>
+        <footer class="cta-footer">
+            <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">ম্যাট্রিক্সের ধরনগুলো শিখতে প্রস্তুত?</p>
+            <a href="02-types.html" class="btn-next">
+                পরবর্তী অধ্যায়: ম্যাট্রিক্সের প্রকারভেদ <i class="fas fa-arrow-right"></i>
+            </a>
+        </footer>
+    </main>
 
-<footer class="footer">
-    <div class="container">
-        <p>গনিতি (Goniti) — দৃশ্যমান উচ্চতর গণিত | Visual Higher Mathematics for HSC Bangladesh</p>
-    </div>
-</footer>
-
-<script>
-    // ========== THEME MANAGEMENT ==========
-    function initTheme() {
-        const savedTheme = localStorage.getItem('goniti-theme') || 'light';
-        setTheme(savedTheme);
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            const themeValue = btn.getAttribute('data-theme');
-            if (themeValue === savedTheme) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-    }
-    
-    function setTheme(theme) {
-        if (theme === 'system') {
-            document.documentElement.removeAttribute('data-theme');
-        } else {
-            document.documentElement.setAttribute('data-theme', theme);
-        }
-        localStorage.setItem('goniti-theme', theme);
-    }
-    
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const theme = btn.getAttribute('data-theme');
-            setTheme(theme);
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-    
-    // ========== MODE SWITCHING ==========
-    const tabs = document.querySelectorAll('.mode-tab');
-    const characterMode = document.getElementById('character-mode');
-    const cameraMode = document.getElementById('camera-mode');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const mode = tab.dataset.mode;
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            if (mode === 'character') {
-                characterMode.classList.add('active');
-                cameraMode.classList.remove('active');
-                setTimeout(() => drawCharacter(), 50);
-                if (threeScene) {
-                    if (cameraControls) cameraControls.dispose();
-                    renderer?.dispose();
-                    renderer = null;
-                    threeScene = null;
-                    cameraControls = null;
-                }
-            } else {
-                characterMode.classList.remove('active');
-                cameraMode.classList.add('active');
-                setTimeout(() => initThreeCamera(), 50);
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "controls": "https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js"
             }
-        });
-    });
-    
-    // ========== CHARACTER MODE ==========
-    const characterCanvas = document.getElementById('characterCanvas');
-    let charCtx = characterCanvas?.getContext('2d');
-    
-    // Character transformation values
-    let charMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
-    
-    // Modern elegant character design
-    function drawCharacterWithMatrix(ctx, matrix, width, height) {
-        const centerX = width / 2 + matrix.tx;
-        const centerY = height / 2 + matrix.ty;
-        
-        // Apply 2x2 transformation
-        function transform(x, y) {
-            return {
-                x: centerX + matrix.a * x + matrix.b * y,
-                y: centerY + matrix.c * x + matrix.d * y
-            };
         }
-        
-        // Helper to draw rounded rectangle
-        function drawRoundedRect(x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
-        
-        const scale = Math.sqrt(Math.abs(matrix.a * matrix.d - matrix.b * matrix.c)) || 1;
-        
-        // Modern gradient head with rounded rectangle
-        const headCenter = transform(0, -28);
-        const headRadius = 22 * scale;
-        const headSize = headRadius * 2;
-        
-        // Head glow effect
-        ctx.shadowBlur = 20 * scale;
-        ctx.shadowColor = 'rgba(59, 130, 246, 0.4)';
-        
-        drawRoundedRect(
-            headCenter.x - headRadius, headCenter.y - headRadius,
-            headSize, headSize,
-            headRadius * 0.35
-        );
-        
-        // Create gradient for head
-        const gradient = ctx.createLinearGradient(
-            headCenter.x - headRadius, headCenter.y - headRadius,
-            headCenter.x + headRadius, headCenter.y + headRadius
-        );
-        gradient.addColorStop(0, '#3B82F6');
-        gradient.addColorStop(0.5, '#1E40AF');
-        gradient.addColorStop(1, '#1E3A8A');
-        
-        ctx.fillStyle = gradient;
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
-        ctx.lineWidth = 1.5 * scale;
-        ctx.stroke();
-        
-        ctx.shadowBlur = 0;
-        
-        // Modern eyes (small circles, sleek)
-        const eyeSize = 4 * scale;
-        const leftEye = transform(-8, -32);
-        const rightEye = transform(8, -32);
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(leftEye.x, leftEye.y, eyeSize, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(rightEye.x, rightEye.y, eyeSize, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Eye highlight
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        ctx.beginPath();
-        ctx.arc(leftEye.x - 1.5 * scale, leftEye.y - 1.5 * scale, eyeSize * 0.5, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(rightEye.x - 1.5 * scale, rightEye.y - 1.5 * scale, eyeSize * 0.5, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Modern glowing accent line (mouth area)
-        const mouthY = transform(0, -18).y;
-        ctx.strokeStyle = 'rgba(96, 165, 250, 0.5)';
-        ctx.lineWidth = 2 * scale;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(transform(-6, -18).x, mouthY);
-        ctx.lineTo(transform(6, -18).x, mouthY);
-        ctx.stroke();
-        
-        // Modern sleek torso with gradient
-        const shoulderL = transform(-14, -4);
-        const shoulderR = transform(14, -4);
-        const baseL = transform(-16, 20);
-        const baseR = transform(16, 20);
-        
-        // Torso body
-        ctx.shadowBlur = 15 * scale;
-        ctx.shadowColor = 'rgba(59, 130, 246, 0.3)';
-        
-        const torsoGradient = ctx.createLinearGradient(
-            transform(-16, -4).x, transform(-16, -4).y,
-            transform(16, 20).x, transform(16, 20).y
-        );
-        torsoGradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
-        torsoGradient.addColorStop(1, 'rgba(30, 64, 175, 0.8)');
-        
-        ctx.fillStyle = torsoGradient;
-        ctx.beginPath();
-        ctx.moveTo(shoulderL.x, shoulderL.y);
-        ctx.lineTo(shoulderR.x, shoulderR.y);
-        ctx.quadraticCurveTo(baseR.x + 3 * scale, transform(10, 20).y, baseR.x, baseR.y);
-        ctx.lineTo(baseL.x, baseL.y);
-        ctx.quadraticCurveTo(baseL.x - 3 * scale, transform(10, 20).y, shoulderL.x, shoulderL.y);
-        ctx.closePath();
-        ctx.fill();
-        
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
-        ctx.lineWidth = 1.5 * scale;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-        
-        // Modern arms - geometric tubes
-        const armLeft = transform(-22, 2);
-        const armRight = transform(22, 2);
-        
-        ctx.strokeStyle = 'rgba(96, 165, 250, 0.7)';
-        ctx.lineWidth = 6 * scale;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(shoulderL.x, shoulderL.y);
-        ctx.lineTo(armLeft.x, armLeft.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(shoulderR.x, shoulderR.y);
-        ctx.lineTo(armRight.x, armRight.y);
-        ctx.stroke();
-        
-        // Hand circles
-        const handSize = 5 * scale;
-        ctx.fillStyle = '#3B82F6';
-        ctx.beginPath();
-        ctx.arc(armLeft.x, armLeft.y, handSize, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(armRight.x, armRight.y, handSize, 0, 2 * Math.PI);
-        ctx.fill();
-        
-        // Modern legs - sleek tubes
-        const legLeftBottom = transform(-12, 38);
-        const legRightBottom = transform(12, 38);
-        
-        ctx.strokeStyle = 'rgba(96, 165, 250, 0.6)';
-        ctx.lineWidth = 5 * scale;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(baseL.x, baseL.y);
-        ctx.lineTo(legLeftBottom.x, legLeftBottom.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(baseR.x, baseR.y);
-        ctx.lineTo(legRightBottom.x, legRightBottom.y);
-        ctx.stroke();
-        
-        // Feet circles
-        const footSize = 4.5 * scale;
-        ctx.fillStyle = '#3B82F6';
-        ctx.beginPath();
-        ctx.arc(legLeftBottom.x, legLeftBottom.y, footSize, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(legRightBottom.x, legRightBottom.y, footSize, 0, 2 * Math.PI);
-        ctx.fill();
-    }
-    
-    function drawCharacter() {
-        if (!charCtx) return;
-        const w = characterCanvas.width;
-        const h = characterCanvas.height;
-        
-        charCtx.clearRect(0, 0, w, h);
-        
-        // Draw grid
-        charCtx.strokeStyle = 'rgba(255,255,255,0.1)';
-        charCtx.lineWidth = 0.5;
-        for (let x = 0; x < w; x += 30) {
-            charCtx.beginPath();
-            charCtx.moveTo(x, 0);
-            charCtx.lineTo(x, h);
-            charCtx.stroke();
-        }
-        for (let y = 0; y < h; y += 30) {
-            charCtx.beginPath();
-            charCtx.moveTo(0, y);
-            charCtx.lineTo(w, y);
-            charCtx.stroke();
-        }
-        
-        drawCharacterWithMatrix(charCtx, charMatrix, w, h);
-        
-        // Update input fields
-        document.getElementById('char-a').value = charMatrix.a.toFixed(3);
-        document.getElementById('char-b').value = charMatrix.b.toFixed(3);
-        document.getElementById('char-c').value = charMatrix.c.toFixed(3);
-        document.getElementById('char-d').value = charMatrix.d.toFixed(3);
-        document.getElementById('char-tx').value = charMatrix.tx.toFixed(0);
-        document.getElementById('char-ty').value = charMatrix.ty.toFixed(0);
-    }
-    
-    function updateCharacterFromMatrix() {
-        drawCharacter();
-    }
-    
-    // Character controls
-    document.getElementById('char-up')?.addEventListener('click', () => { charMatrix.ty -= 10; updateCharacterFromMatrix(); });
-    document.getElementById('char-down')?.addEventListener('click', () => { charMatrix.ty += 10; updateCharacterFromMatrix(); });
-    document.getElementById('char-left')?.addEventListener('click', () => { charMatrix.tx -= 10; updateCharacterFromMatrix(); });
-    document.getElementById('char-right')?.addEventListener('click', () => { charMatrix.tx += 10; updateCharacterFromMatrix(); });
-    document.getElementById('char-rotate-l')?.addEventListener('click', () => {
-        const angle = -15 * Math.PI / 180;
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-        const newA = charMatrix.a * cos - charMatrix.b * sin;
-        const newB = charMatrix.a * sin + charMatrix.b * cos;
-        const newC = charMatrix.c * cos - charMatrix.d * sin;
-        const newD = charMatrix.c * sin + charMatrix.d * cos;
-        charMatrix.a = newA; charMatrix.b = newB; charMatrix.c = newC; charMatrix.d = newD;
-        updateCharacterFromMatrix();
-    });
-    document.getElementById('char-rotate-r')?.addEventListener('click', () => {
-        const angle = 15 * Math.PI / 180;
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-        const newA = charMatrix.a * cos - charMatrix.b * sin;
-        const newB = charMatrix.a * sin + charMatrix.b * cos;
-        const newC = charMatrix.c * cos - charMatrix.d * sin;
-        const newD = charMatrix.c * sin + charMatrix.d * cos;
-        charMatrix.a = newA; charMatrix.b = newB; charMatrix.c = newC; charMatrix.d = newD;
-        updateCharacterFromMatrix();
-    });
-    document.getElementById('char-scale-up')?.addEventListener('click', () => {
-        charMatrix.a *= 1.1; charMatrix.d *= 1.1;
-        updateCharacterFromMatrix();
-    });
-    document.getElementById('char-scale-down')?.addEventListener('click', () => {
-        charMatrix.a *= 0.9; charMatrix.d *= 0.9;
-        updateCharacterFromMatrix();
-    });
-    document.getElementById('char-reset')?.addEventListener('click', () => {
-        charMatrix = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
-        updateCharacterFromMatrix();
-    });
-    
-    // Matrix input binding
-    document.getElementById('char-a')?.addEventListener('input', (e) => { charMatrix.a = parseFloat(e.target.value); drawCharacter(); });
-    document.getElementById('char-b')?.addEventListener('input', (e) => { charMatrix.b = parseFloat(e.target.value); drawCharacter(); });
-    document.getElementById('char-c')?.addEventListener('input', (e) => { charMatrix.c = parseFloat(e.target.value); drawCharacter(); });
-    document.getElementById('char-d')?.addEventListener('input', (e) => { charMatrix.d = parseFloat(e.target.value); drawCharacter(); });
-    document.getElementById('char-tx')?.addEventListener('input', (e) => { charMatrix.tx = parseFloat(e.target.value); drawCharacter(); });
-    document.getElementById('char-ty')?.addEventListener('input', (e) => { charMatrix.ty = parseFloat(e.target.value); drawCharacter(); });
-    
-    // ========== 3D CAMERA MODE (THREE.JS) ==========
-    let threeScene = null;
-    let renderer = null;
-    let camera3d = null;
-    let cameraControls = null;
-    let sceneGrid = null;
-    let cubesArray = [];
-    let axesHelper = null;
-    let showGridFlag = true;
-    
-    async function initThreeCamera() {
-        if (threeScene) return; // Already initialized
-        
-        const container = document.getElementById('three-canvas-container');
-        if (!container) return;
-        
-        // Import Three.js with proper module support
-        const THREE = await import('https://unpkg.com/three@0.128.0/build/three.module.js');
-        const OrbitControls = (await import('https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js')).OrbitControls;
-        
-        // Scene setup
-        threeScene = new THREE.Scene();
-        threeScene.background = new THREE.Color(0x0a0e27);
-        threeScene.fog = new THREE.Fog(0x0a0e27, 80, 100);
-        
-        // Camera
-        const width = container.clientWidth || 500;
-        const height = container.clientHeight || 400;
-        camera3d = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-        camera3d.position.set(5, 3, 5);
-        camera3d.lookAt(0, 0, 0);
-        
-        // Renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-        renderer.setSize(width, height);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFShadowShadowMap;
-        container.innerHTML = '';
-        container.appendChild(renderer.domElement);
-        
-        // OrbitControls
-        cameraControls = new OrbitControls(camera3d, renderer.domElement);
-        cameraControls.target.set(0, 0, 0);
-        cameraControls.enableDamping = true;
-        cameraControls.dampingFactor = 0.05;
-        cameraControls.autoRotate = false;
-        cameraControls.mouseButtons = {
-            LEFT: THREE.MOUSE.ROTATE,
-            MIDDLE: THREE.MOUSE.DOLLY,
-            RIGHT: THREE.MOUSE.PAN
-        };
-        cameraControls.touches = {
-            ONE: THREE.TOUCH.ROTATE,
-            TWO: THREE.TOUCH.DOLLY_PAN
-        };
-        
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        threeScene.add(ambientLight);
-        
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 15, 10);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.width = 2048;
-        directionalLight.shadow.mapSize.height = 2048;
-        directionalLight.shadow.camera.far = 50;
-        directionalLight.shadow.camera.left = -20;
-        directionalLight.shadow.camera.right = 20;
-        directionalLight.shadow.camera.top = 20;
-        directionalLight.shadow.camera.bottom = -20;
-        threeScene.add(directionalLight);
-        
-        // Ground grid
-        const gridHelper = new THREE.GridHelper(20, 20, 0x4a5c7d, 0x2a3c5d);
-        gridHelper.position.y = -3;
-        sceneGrid = gridHelper;
-        threeScene.add(gridHelper);
-        
-        // Axes helper (X: red, Y: green, Z: blue)
-        axesHelper = new THREE.AxesHelper(8);
-        threeScene.add(axesHelper);
-        
-        // Create 8-10 colored cubes at different positions
-        const cubePositions = [
-            { pos: [-5, 0, -5], size: 1.5, color: 0xff6b6b },
-            { pos: [0, 1, -6], size: 1, color: 0x4ecdc4 },
-            { pos: [5, 0.5, -3], size: 1.2, color: 0xffe66d },
-            { pos: [-6, 2, 2], size: 0.9, color: 0x95e1d3 },
-            { pos: [3, 0, 3], size: 1.3, color: 0xc7ceea },
-            { pos: [-2, 1.5, 4], size: 1.1, color: 0xff9ff3 },
-            { pos: [6, 1, 0], size: 1, color: 0x54a0ff },
-            { pos: [0, 2, 6], size: 1.4, color: 0x48dbfb },
-            { pos: [-3, 0.8, -3], size: 0.95, color: 0xffa502 },
-            { pos: [4, 1.2, 2], size: 1.05, color: 0x1dd1a1 }
-        ];
-        
-        cubePositions.forEach(({ pos, size, color }) => {
-            const geometry = new THREE.BoxGeometry(size, size, size);
-            const material = new THREE.MeshStandardMaterial({
-                color: color,
-                metalness: 0.3,
-                roughness: 0.4,
-            });
-            const cube = new THREE.Mesh(geometry, material);
-            cube.position.set(...pos);
-            cube.castShadow = true;
-            cube.receiveShadow = true;
-            threeScene.add(cube);
-            cubesArray.push(cube);
-        });
-        
-        // Floor plane for shadows
-        const floorGeometry = new THREE.PlaneGeometry(100, 100);
-        const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
-        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.y = -3;
-        floor.receiveShadow = true;
-        threeScene.add(floor);
-        
-        // Update input fields and matrix display
-        function updateCameraInputs() {
-            const pos = camera3d.position;
-            // Camera position inputs have been removed - only update matrix display
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'controls';
+
+        let scene, camera, renderer, controls;
+
+        function init() {
+            const container = document.getElementById('viewport');
+            scene = new THREE.Scene();
             
-            // Update 4x4 view matrix
-            const matrixArray = camera3d.matrixWorldInverse.elements;
-            const lines = [];
-            for (let i = 0; i < 4; i++) {
-                const row = [];
-                for (let j = 0; j < 4; j++) {
-                    row.push(matrixArray[i + j * 4].toFixed(3));
-                }
-                lines.push(`[ ${row.join('    ')} ]`);
-            }
-            document.getElementById('view-matrix-display').innerHTML = lines.join('<br>');
+            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(5, 5, 5);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            // Add grid and objects
+            scene.add(new THREE.GridHelper(10, 10, 0x444444, 0x888888));
+            const cube = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshNormalMaterial());
+            scene.add(cube);
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
         }
-        
-        // Input field listeners (removed - camera position inputs hidden)
-        
-        // Control buttons
-        document.getElementById('cam-reset')?.addEventListener('click', () => {
-            camera3d.position.set(5, 3, 5);
-            camera3d.lookAt(0, 0, 0);
-            cameraControls.target.set(0, 0, 0);
-            cameraControls.reset();
-            updateCameraInputs();
-        });
-        
-        // Quick control buttons removed (zoom in, zoom out, grid toggle)
-        
-        // Handle window resize
-        function onWindowResize() {
-            const newWidth = container.clientWidth || 500;
-            const newHeight = Math.max(400, container.clientHeight);
-            camera3d.aspect = newWidth / newHeight;
-            camera3d.updateProjectionMatrix();
-            renderer.setSize(newWidth, newHeight);
-        }
-        window.addEventListener('resize', onWindowResize);
-        
-        // Animation loop
+
         function animate() {
             requestAnimationFrame(animate);
+            controls.update();
+            renderMatrix();
+            renderer.render(scene, camera);
+        }
+
+        function renderMatrix() {
+            const m = camera.matrixWorldInverse.elements;
+            const latex = `\\begin{bmatrix} 
+                ${m[0].toFixed(2)} & ${m[4].toFixed(2)} & ${m[8].toFixed(2)} & ${m[12].toFixed(2)} \\\\
+                ${m[1].toFixed(2)} & ${m[5].toFixed(2)} & ${m[9].toFixed(2)} & ${m[13].toFixed(2)} \\\\
+                ${m[2].toFixed(2)} & ${m[6].toFixed(2)} & ${m[10].toFixed(2)} & ${m[14].toFixed(2)} \\\\
+                ${m[3].toFixed(2)} & ${m[7].toFixed(2)} & ${m[11].toFixed(2)} & ${m[15].toFixed(2)}
+            \\end{bmatrix}`;
             
-            if (cameraControls) {
-                cameraControls.update();
-                updateCameraInputs();
+            if(window.katex) {
+                katex.render(latex, document.getElementById('matrix-display'), { displayMode: true });
             }
-            
-            // Gentle cube rotation for visual interest
-            cubesArray.forEach((cube, i) => {
-                cube.rotation.x += 0.001;
-                cube.rotation.y += 0.002 * (i % 2 ? 1 : -1);
-            });
-            
-            renderer.render(threeScene, camera3d);
         }
-        animate();
-        
-        updateCameraInputs();
-    }
-    
-    
-    // Initial draw
-    setTimeout(() => {
-        if (characterCanvas) {
-            characterCanvas.width = 500;
-            characterCanvas.height = 400;
-            charCtx = characterCanvas.getContext('2d');
-            drawCharacter();
+
+        function onWindowResize() {
+            const container = document.getElementById('viewport');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
         }
-    }, 100);
-    
-    initTheme();
-</script>
+
+        window.resetCamera = () => {
+            camera.position.set(5, 5, 5);
+            controls.target.set(0,0,0);
+        };
+
+        init();
+    </script>
+
+    <script>
+        // Theme Management Logic
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            localStorage.setItem('goniti-theme', theme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('goniti-theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+    </script>
 </body>
 </html>
